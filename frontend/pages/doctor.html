@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Doctor Terminal | MyKad-LifeLink</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="medical-bg">
+    <nav class="top-nav">
+        <a href="../index.html">← Logout</a>
+        <span>Medical Terminal: General Hospital Kuala Lumpur</span>
+    </nav>
+
+    <div class="emergency-container">
+        <section class="scan-section">
+            <button id="scanBtn" class="btn-scan">SCAN MYKAD</button>
+            <p id="statusMsg">Ready to scan patient identity card...</p>
+        </section>
+
+        <section id="patientData" class="data-display" style="display: none;">
+            <div class="alert-banner" id="allergyAlert">
+                ⚠️ CRITICAL ALLERGIES: <span id="allergyList">Loading...</span>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-box blood">
+                    <label>BLOOD TYPE</label>
+                    <div id="bloodType" class="value">--</div>
+                </div>
+                <div class="info-box chronic">
+                    <label>CHRONIC DISEASES</label>
+                    <div id="chronicDiseases" class="value">--</div>
+                </div>
+            </div>
+
+            <div class="patient-details">
+                <p><strong>Name:</strong> <span id="patientName">--</span></p>
+                <p><strong>MyKad:</strong> <span id="mykadNum">--</span></p>
+            </div>
+        </section>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/ui.js"></script>
+</body>
+</html>
