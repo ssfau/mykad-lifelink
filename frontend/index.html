@@ -1,48 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MyKad-LifeLink | Secure Medical Portal</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="icon" href="assets/Backdrop.png">
-</head>
-<body>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
     <div class="landing-container">
-        <header>
-            <img src="assets/Logo.png" alt="MyKad-LifeLink Logo" class="main-logo">
-            <h1>Welcome to MyKad-LifeLink</h1>
-            <p>Accessing life-saving data through your Malaysian Identity Card.</p>
-        </header>
+      <button id="dark-mode-toggle" class="theme-btn" aria-label="Toggle Dark Mode">
+         🌙
+      </button>
+      <header>
+        <img
+          src="assets/Logo.png"
+          alt="MyKad-LifeLink Logo"
+          class="main-logo"
+        />
+        <h1>Welcome to MyKad-LifeLink</h1>
+        <p>Accessing life-saving data through your Malaysian Identity Card.</p>
+      </header>
 
-        <main class="role-selection">
-            <h2>Please Select Your Role</h2>
-            <div class="card-grid">
-                <div class="role-card patient" onclick="location.href='pages/patient.html'">
-                    <div class="icon">👤</div>
-                    <h3>Patient</h3>
-                    <p>Register your MyKad and manage your medical consent.</p>
-                </div>
+      <main class="role-selection">
+        <h2>Please Select Your Role</h2>
+        <div class="card-grid">
+          <div
+            class="role-card patient"
+            onclick="location.href='pages/patient.html'"
+          >
+            <div class="icon">👤</div>
+            <h3>Patient</h3>
+            <p>Register your MyKad and manage your medical consent.</p>
+          </div>
 
-                <div class="role-card doctor" onclick="location.href='pages/doctor.html'">
-                    <div class="icon">⚕️</div>
-                    <h3>Medical Professional</h3>
-                    <p>Emergency access to patient blood type and allergies.</p>
-                </div>
+          <div
+            class="role-card doctor"
+            onclick="location.href='pages/doctor.html'"
+          >
+            <div class="icon">⚕️</div>
+            <h3>Medical Professional</h3>
+            <p>Emergency access to patient blood type and allergies.</p>
+          </div>
 
-                <div class="role-card admin" onclick="location.href='pages/admin.html'">
-                    <div class="icon">🏢</div>
-                    <h3>Clinic Staff</h3>
-                    <p>Prescription management and hospital records.</p>
-                </div>
-            </div>
-        </main>
+          <div
+            class="role-card admin"
+            onclick="location.href='pages/admin.html'"
+          >
+            <div class="icon">🏢</div>
+            <h3>Clinic Staff</h3>
+            <p>Prescription management and hospital records.</p>
+          </div>
+        </div>
+      </main>
 
-        <footer>
-            <p>&copy; 2025 NexG Godamlah 2.0 Hackathon | Team LifeLink</p>
-        </footer>
+      <footer>
+        <p>&copy; 2025 NexG Godamlah 2.0 Hackathon | Team LifeLink</p>
+      </footer>
     </div>
 
     <script src="js/ui.js"></script>
-</body>
+  </body>
 </html>

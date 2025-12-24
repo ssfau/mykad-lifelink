@@ -1,52 +1,72 @@
-/* 1. THE RESET - This stops the "Blunders" by removing default browser gaps */
+/* ============================================================ */
+/* 0. GLOBAL TRANSITIONS & RESET FOR ALL ELEMENTS */
+/* ============================================================ */
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box; /* Ensures padding doesn't break your layout */
+    box-sizing: border-box; 
+    /* Smooth transition for background, text, borders, and shadows */
+    transition: background-color 0.3s ease,
+                color 0.3s ease,
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
 }
 
+/* ============================================================ */
+/* 1. RESET STYLES - Remove default browser spacing and box sizing */
+/* ============================================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Prevent padding/border from affecting layout width/height */
+}
+
+/* ============================================================ */
+/* 2. VARIABLES - Theme colors and easy maintenance */
+/* ============================================================ */
 :root {
-    --primary-blue: #003366; 
-    --emergency-red: #cc0000;
-    --text-dark: #333333;
-    --accent-gray: #f4f4f4;
-    --white-overlay: rgba(255, 255, 255, 0.95);
+    --primary-blue: #003366;          /* Primary color for headers and patient role */
+    --emergency-red: #cc0000;         /* Red for alerts and doctor role */
+    --text-dark: #333333;             /* Default text color */
+    --accent-gray: #f4f4f4;           /* Light gray accents */
+    --white-overlay: rgba(255, 255, 255, 0.95); /* Semi-transparent landing container */
+    --bg-card: #ffffff;                /* Default card background */
 }
 
-/* 2. THE BODY - This centers your entire app on the screen */
+/* ============================================================ */
+/* 3. BODY - Main page setup and centering */
+/* ============================================================ */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: url('../assets/Backdrop.png') no-repeat center center fixed;
-    background-size: cover;
-    
-    /* Perfect Centering Logic */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Clean UI font */
+    background: none; /* BACKDROP REMOVED FOR LANDING PAGE */
+    display: flex;           /* Flex container for centering content */
+    justify-content: center; /* Horizontal centering */
+    align-items: center;     /* Vertical centering */
     width: 100vw;
     height: 100vh;
-    overflow: hidden; /* No more scrolling */
+    overflow: hidden;        /* Disable scrolling */
 }
 
-/* 3. THE MAIN CONTAINER */
+/* ============================================================ */
+/* 4. LANDING CONTAINER - Central content box styling */
+/* ============================================================ */
 .landing-container {
-    background: var(--white-overlay);
-    width: 90%;
-    max-width: 950px;
+    background: var(--white-overlay); /* Semi-transparent container */
+    width: 100vw;
+    height: 100vh;
     padding: 40px;
-    border-radius: 20px;
     text-align: center;
     box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-    
-    /* Vertical spacing inside the box */
     display: flex;
-    flex-direction: column;
-    gap: 30px;
+    flex-direction: column; /* Vertical stacking of children */
+    gap: 30px;              /* Space between sections */
+    position: relative;     /* For absolute positioning of toggle icon */
 }
 
-/* 4. HEADER & LOGO */
-header h1  {
+/* ============================================================ */
+/* 5. HEADER & LOGO */
+/* ============================================================ */
+header h1 {
     color: var(--primary-blue);
     font-size: 2rem;
     margin-bottom: 5px;
@@ -63,41 +83,52 @@ header p {
     margin-bottom: 15px;
 }
 
-/* 5. THE ROLE CARDS GRID */
+/* ============================================================ */
+/* 6. ROLE CARDS GRID LAYOUT */
+/* ============================================================ */
 .card-grid {
-    display: flex;
-    gap: 20px;
+    display: flex;   /* Horizontal layout of role cards */
+    gap: 20px;       /* Space between cards */
     width: 100%;
 }
 
+/* ============================================================ */
+/* 7. ROLE CARD BASE STYLING */
+/* ============================================================ */
 .role-card {
-    background: white;
+    background: var(--bg-card);
     border: 2px solid #e0e0e0;
     border-radius: 15px;
     padding: 30px 20px;
-    flex: 1; /* Makes all cards equal width */
+    flex: 1;            /* Equal width for all cards */
     cursor: pointer;
     transition: all 0.3s ease;
-    
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Vertical stacking for icon/text */
     align-items: center;
     gap: 15px;
 }
 
-/* Hover Effects */
-.role-card:hover {
+/* ============================================================ */
+/* 8. ROLE CARD HOVER AND ACTIVE EFFECTS */
+/* ============================================================ */
+/* Base hover/active transform and shadow for all role cards */
+.role-card:hover,
+.role-card:active {
     transform: translateY(-10px);
     box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
-.patient:hover { border-color: var(--primary-blue); }
-.doctor:hover { border-color: var(--emergency-red); }
-.admin:hover { border-color: #555; }
+/* Role-specific border colors */
+.patient:hover, .patient:active { border-color: var(--primary-blue); }
+.doctor:hover, .doctor:active { border-color: var(--emergency-red); }
+.admin:hover, .admin:active { border-color: #555; }
 
-/* Icon Styling */
+/* ============================================================ */
+/* 9. ICONS AND TEXT INSIDE ROLE CARDS */
+/* ============================================================ */
 .icon {
-    font-size: 3rem;
+    font-size: 3rem; /* Large icon size */
 }
 
 .role-card h3 {
@@ -111,7 +142,9 @@ header p {
     line-height: 1.4;
 }
 
-/* 6. FOOTER */
+/* ============================================================ */
+/* 10. FOOTER STYLING */
+/* ============================================================ */
 footer {
     font-size: 0.8rem;
     color: #888;
@@ -119,28 +152,351 @@ footer {
     padding-top: 20px;
 }
 
-/* 7. RESPONSIVENESS (For mobile judges) */
+/* ============================================================ */
+/* 11. RESPONSIVE DESIGN FOR MOBILE */
+/* ============================================================ */
 @media (max-width: 768px) {
     .card-grid {
-        flex-direction: column;
+        flex-direction: column; /* Stack cards vertically */
     }
     body {
-        overflow-y: auto; /* Allow scroll only on tiny phones */
+        overflow-y: auto; /* Allow vertical scrolling on small devices */
     }
     .landing-container {
         margin: 20px;
     }
 }
 
-h2 {
-    padding: 1em;
-}
-
-.back-link {
-    position: absolute;
+/* ============================================================ */
+/* 12. BACK LINK STYLING */
+/* ============================================================ */
+#back-link {
+    position: absolute; /* Positioned relative to landing container */
     top: 1em;
     left: 1em;
     text-decoration: none;
     color: var(--primary-blue);
     font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+#back-link:hover,
+#back-link:active {
+    color: var(--emergency-red);
+    transform: translateX(-5px);
+    letter-spacing: 1px;
+}
+
+/* ============================================================ */
+/* 13. DARK MODE VARIABLES AND OVERRIDES */
+/* ============================================================ */
+body.dark-mode {
+    --primary-blue: #4da3ff;
+    --emergency-red: #ff4d4d;
+    --text-dark: #f0f0f0;
+    --accent-gray: #121212;
+    --white-overlay: rgba(20, 20, 20, 0.95);
+    --bg-card: #252525;
+}
+
+/* Force dark-mode colors on core elements */
+body.dark-mode .landing-container,
+body.dark-mode .role-card,
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode p,
+body.dark-mode footer,
+body.dark-mode .icon {
+    color: var(--text-dark);
+}
+
+body.dark-mode .role-card {
+    background: var(--bg-card);
+    border-color: #444;
+}
+
+body.dark-mode .role-card p {
+    opacity: 0.7;
+}
+
+body.dark-mode footer {
+    border-top: 1px solid #333;
+}
+
+body.dark-mode #back-link {
+    color: var(--primary-blue);
+}
+
+/* ============================================================ */
+/* 14. DARK MODE TOGGLE ICON POSITION */
+/* ============================================================ */
+#dark-mode-toggle {
+    position: absolute; /* Top-right corner */
+    top: 1em;
+    right: 1em;
+    cursor: pointer;
+    font-size: 1.8rem;
+    background: transparent;
+    border: none;
+    padding: 0;
+    line-height: 1;
+    z-index: 100;
+    transition: transform 5s ease;
+}
+
+#dark-mode-toggle:active {
+    transform: scale(0.9);
+}
+
+/* ============================================================ */
+/* 15. HEADINGS & GENERAL SPACING */
+/* ============================================================ */
+h2 {
+    padding: 1em;
+}
+
+/* Smooth body transition for dark mode toggle */
+body {
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+/* ============================================================ */
+/* 16. ROLE CARD SPECIFIC GLOW EFFECTS */
+/* ============================================================ */
+/* Patient Glow (Blue) */
+.role-card.patient:hover {
+    transform: translateY(-12px) scale(1.02);
+    border-color: var(--primary-blue);
+    box-shadow: 0 15px 35px rgba(0, 51, 102, 0.3); /* Soft blue glow */
+}
+
+/* Doctor Glow (Red) */
+.role-card.doctor:hover {
+    transform: translateY(-12px) scale(1.02);
+    border-color: var(--emergency-red);
+    box-shadow: 0 15px 35px rgba(204, 0, 0, 0.3); /* Soft red glow */
+}
+
+/* Admin/Clinic Glow (Gray/Purple) */
+.role-card.admin:hover {
+    transform: translateY(-12px) scale(1.02);
+    border-color: #8300fe;
+    box-shadow: 0 15px 35px rgba(76, 0, 255, 0.367);
+}
+
+/* Dark Mode Adjustments for Glow */
+body.dark-mode .role-card.patient:hover {
+    box-shadow: 0 15px 40px rgba(77, 163, 255, 0.4);
+}
+body.dark-mode .role-card.doctor:hover {
+    box-shadow: 0 15px 40px rgba(255, 77, 77, 0.4);
+}
+body.dark-mode .role-card.admin:hover {
+    box-shadow: 0 15px 40px rgba(62, 3, 199, 0.761);
+}
+
+/* ============================================================ */
+/* 17. ROLE CARD GLOW ON CLICK (ACTIVE) */
+/* ============================================================ */
+.role-card.patient:active {
+    transform: translateY(-12px) scale(1.02);
+    border-color: var(--primary-blue);
+    box-shadow: 0 15px 35px rgba(0, 51, 102, 0.3);
+}
+
+.role-card.doctor:active {
+    transform: translateY(-12px) scale(1.02);
+    border-color: var(--emergency-red);
+    box-shadow: 0 15px 35px rgba(204, 0, 0, 0.3);
+}
+
+.role-card.admin:active {
+    transform: translateY(-12px) scale(1.02);
+    border-color: #8300fe;
+    box-shadow: 0 15px 35px rgba(76, 0, 255, 0.367);
+}
+
+/* Dark Mode Adjustments for Active Glow */
+body.dark-mode .role-card.patient:active {
+    box-shadow: 0 15px 40px rgba(77, 163, 255, 0.4);
+}
+body.dark-mode .role-card.doctor:active {
+    box-shadow: 0 15px 40px rgba(255, 77, 77, 0.4);
+}
+body.dark-mode .role-card.admin:active {
+    box-shadow: 0 15px 40px rgba(62, 3, 199, 0.761);
+}
+
+/* ============================================================ */
+/* 18. DARK MODE INPUTS / TEXTAREAS */
+/* ============================================================ */
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
+    background-color: #333; /* Dark background for inputs */
+    color: #f0f0f0;         /* Light text */
+    border: 1px solid #555; /* Subtle border for inputs */
+    border-radius: 5px;
+    padding: 8px 12px;
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+    color: #aaa; /* Dimmed placeholder text */
+}
+
+/* ============================================================ */
+/* 19. MOBILE SCROLL SAFETY - Ensure usable scrolling on small screens */
+/* ============================================================ */
+@media (max-width: 768px) {
+    body {
+        height: auto;          /* Allow body to expand naturally */
+        min-height: 100vh;     /* Still fill at least the screen */
+        overflow-y: auto;      /* Enable vertical scrolling */
+    }
+
+    .landing-container {
+        height: auto;          /* Prevent content clipping */
+        min-height: 100vh;     /* Maintain full-screen feel */
+    }
+}
+
+/* ============================================================ */
+/* 20. MOBILE TYPOGRAPHY & TOUCH OPTIMIZATION */
+/* Improves readability and usability on small screens */
+/* ============================================================ */
+@media (max-width: 768px) {
+
+    /* ---------- Global text scaling ---------- */
+    body {
+        font-size: 16px;              /* Baseline readable mobile size */
+        line-height: 1.6;             /* Comfortable reading rhythm */
+    }
+
+    /* ---------- Headings ---------- */
+    header h1 {
+        font-size: 2.2rem;            /* More presence on mobile */
+    }
+
+    header p {
+        font-size: 1.2rem;            /* Easier instruction reading */
+    }
+
+    h2 {
+        font-size: 1.6rem;
+        padding: 0.8em 0;
+    }
+
+    h3 {
+        font-size: 1.3rem;
+    }
+
+    /* ---------- Role cards ---------- */
+    .role-card {
+        padding: 35px 25px;           /* Bigger tap area */
+        gap: 18px;
+    }
+
+    .role-card p {
+        font-size: 1rem;              /* Improve legibility */
+        line-height: 1.5;
+    }
+
+    /* ---------- Icons ---------- */
+    .icon {
+        font-size: 3.5rem;            /* Stronger visual cue */
+    }
+
+    /* ---------- Footer ---------- */
+    footer {
+        font-size: 0.9rem;
+    }
+
+    /* ---------- Back link ---------- */
+    #back-link {
+        font-size: 1rem;
+        padding: 8px 12px;            /* Easier thumb tapping */
+    }
+
+    /* ---------- Dark mode toggle ---------- */
+    #dark-mode-toggle {
+        font-size: 2rem;              /* Thumb-friendly */
+    }
+
+    /* ---------- Inputs & textareas ---------- */
+    input,
+    textarea,
+    select {
+        font-size: 1rem;              /* Prevent mobile zoom on focus */
+        padding: 12px 14px;
+    }
+}
+
+/* ============================================================ */
+/* 21. MOBILE OVERRIDES (FINAL & EFFECTIVE) */
+/* ============================================================ */
+@media (max-width: 768px) {
+
+    /* ---------- Unlock layout ---------- */
+    body {
+        height: auto;
+        min-height: 100vh;
+        overflow-y: auto;
+    }
+
+    .landing-container {
+        height: auto;
+        min-height: 100vh;
+        padding: 32px 20px;
+    }
+
+    /* ---------- Typography ---------- */
+    header h1 {
+        font-size: 2.2rem;
+    }
+
+    header p {
+        font-size: 1.2rem;
+    }
+
+    h2 {
+        font-size: 1.6rem;
+    }
+
+    .role-card h3 {
+        font-size: 1.4rem;
+    }
+
+    .role-card p {
+        font-size: 1rem;
+    }
+
+    /* ---------- Cards ---------- */
+    .role-card {
+        padding: 36px 24px;
+    }
+
+    /* ---------- Icons ---------- */
+    .icon {
+        font-size: 3.6rem;
+    }
+
+    /* ---------- Inputs ---------- */
+    input,
+    textarea,
+    select {
+        font-size: 1rem;
+        padding: 12px 14px;
+    }
+
+    /* ---------- Controls ---------- */
+    #dark-mode-toggle {
+        font-size: 2rem;
+    }
+
+    #back-link {
+        font-size: 1rem;
+        padding: 10px 12px;
+    }
 }
