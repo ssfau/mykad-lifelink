@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient Registration | MyKad-LifeLink</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="landing-container" style="max-height: 95vh; overflow-y: auto;">
+        <header>
+            <a href="../index.html" class="back-link" style="left: 1em;">← Back</a>
+            <h1>Patient Portal</h1>
+            <p>Update your emergency medical profile.</p>
+        </header>
+
+        <form id="patientForm" style="display: flex; flex-direction: column; gap: 15px; text-align: left;">
+            <label>Full Name</label>
+            <input type="text" placeholder="Enter name as per MyKad" required style="padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+
+            <label>MyKad Number</label>
+            <input type="text" placeholder="XXXXXX-XX-XXXX" required style="padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+
+            <label>Select Blood Type</label>
+            <select style="padding: 10px; border-radius: 5px;">
+                <option>A+</option><option>A-</option><option>B+</option>
+                <option>B-</option><option>O+</option><option>O-</option>
+                <option>AB+</option><option>AB-</option>
+            </select>
+
+            <label>Known Allergies</label>
+            <textarea placeholder="e.g. Penicillin, Peanuts" style="padding: 10px; border-radius: 5px; border: 1px solid #ddd;"></textarea>
+
+            <div style="display: flex; gap: 10px; align-items: flex-start; background: #f9f9f9; padding: 10px; border-radius: 5px;">
+                <input type="checkbox" id="consent" required>
+                <label for="consent" style="font-size: 0.85rem;">I agree to allow medical staff to access this data during emergencies using my MyKad.</label>
+            </div>
+
+            <button type="submit" class="role-card patient" style="padding: 15px; background: var(--primary-blue); color: white;">SAVE PROFILE</button>
+        </form>
+    </div>
+    <script src="../js/api.js"></script>
+</body>
+</html>
