@@ -2,45 +2,62 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Doctor Terminal | MyKad-LifeLink</title>
+    <title>Paramedic Terminal | MyKad-LifeLink</title>
     <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* Rapid Pulse Animation for the Scan Button */
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(204, 0, 0, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(204, 0, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(204, 0, 0, 0); }
+        }
+        .pulse-btn {
+            animation: pulse-red 2s infinite;
+            background-color: var(--emergency-red) !important;
+            color: white !important;
+            font-weight: bold;
+        }
+        .hidden { display: none !important; }
+        .critical-label { color: var(--emergency-red); font-weight: 800; font-size: 1.2rem; }
+    </style>
 </head>
-<body class="medical-bg">
-    <nav class="top-nav">
-        <a href="../index.html">← Logout</a>
-        <span>Medical Terminal: General Hospital Kuala Lumpur</span>
-    </nav>
+<body>
+    <div class="landing-container">
+        <header>
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <a href="../index.html" class="back-link" style="left: 1em;">← Exit</a>
+                <span id="systemClock" style="font-family: monospace; color: #666;">--:--:--</span>
+            </div>
+            <h1>Emergency Response</h1>
+            <p id="instructionText">Place MyKad on reader to begin extraction.</p>
+        </header>
 
-    <div class="emergency-container">
-        <section class="scan-section">
-            <button id="scanBtn" class="btn-scan">SCAN MYKAD</button>
-            <p id="statusMsg">Ready to scan patient identity card...</p>
-        </section>
+        <main id="scanInterface">
+            <div class="role-card pulse-btn" id="scanBtn">
+                <div class="icon">📡</div>
+                <h2 id="btnText">READY TO SCAN</h2>
+            </div>
+            <div id="loader" class="hidden" style="margin-top: 20px;">
+                <p>Establishing Secure Link to JPN/KKM...</p>
+                <progress style="width: 100%;"></progress>
+            </div>
+        </main>
 
-        <section id="patientData" class="data-display" style="display: none;">
-            <div class="alert-banner" id="allergyAlert">
-                ⚠️ CRITICAL ALLERGIES: <span id="allergyList">Loading...</span>
+        <main id="resultInterface" class="hidden">
+            <div class="alert-banner" style="background: #ffeded; border: 2px solid var(--emergency-red); padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                <span class="critical-label">⚠️ ALLERGY ALERT:</span>
+                <span id="patientAllergies" style="font-size: 1.2rem; color: #000;">Loading...</span>
             </div>
 
-            <div class="info-grid">
-                <div class="info-box blood">
-                    <label>BLOOD TYPE</label>
-                    <div id="bloodType" class="value">--</div>
+            <div class="info-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: left;">
+                <div class="role-card" style="padding: 15px; flex: unset;">
+                    <small>BLOOD TYPE</small>
+                    <h2 id="patientBlood" style="color: var(--emergency-red);">O+</h2>
                 </div>
-                <div class="info-box chronic">
-                    <label>CHRONIC DISEASES</label>
-                    <div id="chronicDiseases" class="value">--</div>
+                <div class="role-card" style="padding: 15px; flex: unset;">
+                    <small>CHRONIC STATUS</small>
+                    <h2 id="patientChronic">Asthma</h2>
                 </div>
             </div>
 
-            <div class="patient-details">
-                <p><strong>Name:</strong> <span id="patientName">--</span></p>
-                <p><strong>MyKad:</strong> <span id="mykadNum">--</span></p>
-            </div>
-        </section>
-    </div>
-
-    <script src="../js/api.js"></script>
-    <script src="../js/ui.js"></script>
-</body>
-</html>
+            <div style="margin-top: 20px; padding: 15px; background: #f4f4f4; border-radius: 10

@@ -46,7 +46,7 @@ body {
 }
 
 /* 4. HEADER & LOGO */
-header h1 {
+header h1  {
     color: var(--primary-blue);
     font-size: 2rem;
     margin-bottom: 5px;
@@ -130,4 +130,17 @@ footer {
     .landing-container {
         margin: 20px;
     }
+}
+
+h2 {
+    padding: 1em;
+}
+
+.back-link {
+    position: absolute;
+    top: 1em;
+    left: 1em;
+    text-decoration: none;
+    color: var(--primary-blue);
+    font-weight: 500;
 }
