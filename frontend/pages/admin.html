@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient Registration | MyKad-LifeLink</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <div class="landing-container" style="max-height: 95vh; overflow-y: auto;">
+    <div class="landing-container" style="min-height: 100vh; overflow-y: auto;">
         <header>
-            <a href="../index.html" class="back-link" style="left: 1em;">← Back</a>
+            <a href="../index.html" id="back-link">← Back</a>
             <h1>Patient Portal</h1>
             <p>Update your emergency medical profile.</p>
         </header>
@@ -36,8 +37,11 @@
             </div>
 
             <button type="submit" class="role-card patient" style="padding: 15px; background: var(--primary-blue); color: white;">SAVE PROFILE</button>
+            <button id="dark-mode-toggle" aria-label="Toggle Dark Mode">🌓</button>
+
         </form>
     </div>
     <script src="../js/api.js"></script>
+    <script src="../js/ui.js"></script>
 </body>
 </html>

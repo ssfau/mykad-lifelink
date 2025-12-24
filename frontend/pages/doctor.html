@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Paramedic Terminal | MyKad-LifeLink</title>
     <link rel="stylesheet" href="../css/style.css">
     <style>
@@ -25,7 +26,7 @@
     <div class="landing-container">
         <header>
             <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                <a href="../index.html" class="back-link" style="left: 1em;">← Exit</a>
+                <a href="../index.html" id="back-link">← Exit</a>
                 <span id="systemClock" style="font-family: monospace; color: #666;">--:--:--</span>
             </div>
             <h1>Emergency Response</h1>
@@ -60,4 +61,20 @@
                 </div>
             </div>
 
-            <div style="margin-top: 20px; padding: 15px; background: #f4f4f4; border-radius: 10
+            <div style="margin-top: 20px; padding: 15px; background: #f4f4f4; border-radius: 10px;">
+                <small>ADDITIONAL NOTES</small>
+                <p id="additionalNotes">No critical alerts.</p>
+            </div>
+        </main>
+
+        <footer>
+            &copy; 2025 MyKad-LifeLink | Paramedic Terminal
+        </footer>
+    </div>
+
+    <!-- Optional: Dark Mode Toggle Button -->
+    <button id="dark-mode-toggle" aria-label="Toggle Dark Mode">🌓</button>
+
+    <script src="../js/ui.js" defer></script>
+</body>
+</html>
