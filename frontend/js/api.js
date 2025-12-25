@@ -201,6 +201,14 @@ const ApiService = {
     },
 
     /**
+     * Alias for patientInitialScan - Initial MyKad scan
+     * POST /patient/mykadscan/initial
+     */
+    async initialScan(file) {
+        return await this.patientInitialScan(file);
+    },
+
+    /**
      * Patient: Confirm registration with patient data
      * POST /patient/mykadscan/confirmation
      * Requires: Bearer token (patient role)
@@ -224,6 +232,15 @@ const ApiService = {
             alert(`Registration failed: ${error.message}`);
             return null;
         }
+    },
+
+    /**
+     * Alias for patientConfirmRegistration - Confirm patient registration
+     * POST /patient/mykadscan/confirmation
+     * Requires: Bearer token (patient role)
+     */
+    async confirmRegistration(patientData) {
+        return await this.patientConfirmRegistration(patientData);
     },
 
     /**

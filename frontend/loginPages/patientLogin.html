@@ -11,9 +11,16 @@
         <header>
             <a href="../index.html" id="back-link">← Back</a>
             <h1>Patient Portal</h1>
-            <p>Sign in to manage your emergency medical profile.</p>
+            <p id="headerSubtitle">Sign in to manage your emergency medical profile.</p>
         </header>
 
+        <!-- Toggle Buttons -->
+        <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; max-width: 420px; margin-left: auto; margin-right: auto;">
+            <button id="toggleLogin" class="toggle-btn active" style="flex: 1; padding: 10px; border: 2px solid var(--primary-blue); background: var(--primary-blue); color: white; border-radius: 5px; cursor: pointer;">Login</button>
+            <button id="toggleRegister" class="toggle-btn" style="flex: 1; padding: 10px; border: 2px solid var(--primary-blue); background: transparent; color: var(--primary-blue); border-radius: 5px; cursor: pointer;">Register</button>
+        </div>
+
+        <!-- Login Form -->
         <form id="loginForm" style="display: flex; flex-direction: column; gap: 15px; text-align: left; max-width: 420px; margin: 0 auto;">
             <label>MyKad Number</label>
             <input id="username" type="text" placeholder="XXXXXX-XX-XXXX" required style="padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
@@ -26,12 +33,79 @@
             <button type="submit" class="role-card patient" style="padding: 15px; background: var(--primary-blue); color: white;">SIGN IN</button>
             <button id="dark-mode-toggle" aria-label="Toggle Dark Mode">☀️</button>
         </form>
+
+        <!-- Registration Form -->
+        <form id="registrationForm" style="display: none; flex-direction: column; gap: 15px; text-align: left; max-width: 420px; margin: 0 auto;">
+            <label>Full Name</label>
+            <input id="reg_full_name" type="text" placeholder="Enter name as per MyKad" required style="padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+
+            <label>MyKad Number (NRIC)</label>
+            <input id="reg_nric_number" type="text" placeholder="XXXXXX-XX-XXXX" required style="padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+
+            <label>Date of Birth</label>
+            <input id="reg_birth_date" type="date" required style="padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+
+            <label>Sex</label>
+            <select id="reg_sex" required style="padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+                <option value="">Select...</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+
+            <label>Blood Type</label>
+            <select id="reg_blood_type" required style="padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+                <option value="">Select...</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+            </select>
+
+            <div id="reg_errorMsg" style="color: var(--emergency-red); display: none; font-size: 0.95rem;"></div>
+
+            <button type="submit" class="role-card patient" style="padding: 15px; background: var(--primary-blue); color: white;">REGISTER</button>
+            <button id="dark-mode-toggle-reg" aria-label="Toggle Dark Mode">☀️</button>
+        </form>
     </div>
 
     <script src="../js/api.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Toggle between Login and Registration views
+            const toggleLogin = document.getElementById('toggleLogin');
+            const toggleRegister = document.getElementById('toggleRegister');
             const loginForm = document.getElementById('loginForm');
+            const registrationForm = document.getElementById('registrationForm');
+            const headerSubtitle = document.getElementById('headerSubtitle');
+
+            toggleLogin.addEventListener('click', () => {
+                loginForm.style.display = 'flex';
+                registrationForm.style.display = 'none';
+                toggleLogin.classList.add('active');
+                toggleLogin.style.background = 'var(--primary-blue)';
+                toggleLogin.style.color = 'white';
+                toggleRegister.classList.remove('active');
+                toggleRegister.style.background = 'transparent';
+                toggleRegister.style.color = 'var(--primary-blue)';
+                headerSubtitle.textContent = 'Sign in to manage your emergency medical profile.';
+            });
+
+            toggleRegister.addEventListener('click', () => {
+                loginForm.style.display = 'none';
+                registrationForm.style.display = 'flex';
+                toggleRegister.classList.add('active');
+                toggleRegister.style.background = 'var(--primary-blue)';
+                toggleRegister.style.color = 'white';
+                toggleLogin.classList.remove('active');
+                toggleLogin.style.background = 'transparent';
+                toggleLogin.style.color = 'var(--primary-blue)';
+                headerSubtitle.textContent = 'Register your MyKad and create your emergency medical profile.';
+            });
+
             const errorMsg = document.getElementById('errorMsg');
 
             loginForm.addEventListener('submit', async (e) => {
@@ -70,6 +144,82 @@
                 } else {
                     errorMsg.innerText = resp.message || 'Login failed. Try again.';
                     errorMsg.style.display = 'block';
+                }
+            });
+
+            // Registration Form Handler
+            const regErrorMsg = document.getElementById('reg_errorMsg');
+
+            registrationForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                regErrorMsg.style.display = 'none';
+
+                // Collect form data matching PatientRegistrationConfirm schema
+                const registrationData = {
+                    full_name: document.getElementById('reg_full_name').value.trim(),
+                    nric_number: document.getElementById('reg_nric_number').value.trim(),
+                    birth_date: document.getElementById('reg_birth_date').value, // YYYY-MM-DD format
+                    sex: document.getElementById('reg_sex').value,
+                    blood_type: document.getElementById('reg_blood_type').value,
+                    // Optional fields - set to null if not provided
+                    allergies: null,
+                    chronic_conditions: null,
+                    risk_factors: null,
+                    emergency_contacts: null
+                };
+
+                // Validate required fields
+                if (!registrationData.full_name || !registrationData.nric_number || 
+                    !registrationData.birth_date || !registrationData.sex || !registrationData.blood_type) {
+                    regErrorMsg.innerText = 'Please fill in all required fields.';
+                    regErrorMsg.style.display = 'block';
+                    return;
+                }
+
+                try {
+                    // First, login to get a token (since registration requires auth)
+                    // For registration flow, we'll use a temporary login with user_id=1
+                    const loginResp = await ApiService.login(1, 'patient');
+                    
+                    if (!loginResp || !loginResp.access_token) {
+                        regErrorMsg.innerText = 'Failed to authenticate. Please try again.';
+                        regErrorMsg.style.display = 'block';
+                        return;
+                    }
+
+                    // Store token for the registration request
+                    localStorage.setItem('access_token', loginResp.access_token);
+                    localStorage.setItem('token_type', loginResp.token_type || 'bearer');
+                    localStorage.setItem('role', loginResp.role || 'patient');
+                    localStorage.setItem('authorization', `Bearer ${loginResp.access_token}`);
+
+                    // Submit registration
+                    const submitBtn = registrationForm.querySelector('button[type="submit"]');
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'REGISTERING...';
+
+                    const result = await ApiService.confirmRegistration(registrationData);
+
+                    if (result && (result.status === 'created' || result.status === 'exists')) {
+                        alert(`Registration ${result.status === 'created' ? 'Successful' : 'Info'}: ${result.message}`);
+                        
+                        // Store NRIC for profile access
+                        localStorage.setItem('nric', registrationData.nric_number);
+                        
+                        // Redirect to patient profile page
+                        window.location.href = '../pages/patient.html';
+                    } else {
+                        regErrorMsg.innerText = result?.message || 'Registration failed. Please try again.';
+                        regErrorMsg.style.display = 'block';
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'REGISTER';
+                    }
+                } catch (error) {
+                    regErrorMsg.innerText = error.message || 'Registration failed. Please try again.';
+                    regErrorMsg.style.display = 'block';
+                    const submitBtn = registrationForm.querySelector('button[type="submit"]');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'REGISTER';
                 }
             });
         });
