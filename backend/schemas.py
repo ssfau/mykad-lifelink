@@ -66,3 +66,17 @@ class PatientDataCreate(PatientDataBase):
 class PatientDataResponse(PatientDataBase):
     user_id: str = Field(..., examples=["abc123xyz"])
 
+# clinic admin purposes
+
+class ClinicPatientViewResponse(BaseModel):
+    full_name: str
+    sex: str
+    birth_date: date
+    nric_number: str
+
+    prescriptions: list[MedicationPrescription] | None = None
+    presenting_complaint: list[PresentingComplaint] | None = None
+
+class ClinicPatientUpdateRequest(BaseModel):
+    prescriptions: list[MedicationPrescription] | None = None
+    presenting_complaint: list[PresentingComplaint] | None = None

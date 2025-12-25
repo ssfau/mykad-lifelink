@@ -89,13 +89,11 @@ class Patient(Base):
     sex: Mapped[str] = mapped_column(String, nullable=False)
     blood_type: Mapped[str] = mapped_column(String, nullable=False)
 
-    # JSON fields for prototype
     allergies: Mapped[Optional[List[str]]] = mapped_column(JSON, nullable=True)
     chronic_conditions: Mapped[Optional[List[str]]] = mapped_column(JSON, nullable=True)
     risk_factors: Mapped[Optional[List[str]]] = mapped_column(JSON, nullable=True)
     advanced_directives: Mapped[Optional[List[str]]] = mapped_column(JSON, nullable=True)
 
-    # Relationships
     major_surgeries: Mapped[List["PreviousMajorSurgeries"]] = relationship("PreviousMajorSurgeries", back_populates="patient")
     prescriptions: Mapped[List["MedicationPrescription"]] = relationship("MedicationPrescription", back_populates="patient")
     immunization: Mapped[List["Immunization"]] = relationship("Immunization", back_populates="patient")

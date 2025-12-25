@@ -64,16 +64,13 @@ def confirm_mykadscan(
         "message": "Patient registered successfully"
     }
 
-
+# view own data
 @router.get("/patient/profile", response_model=schemas.PatientDataResponse)
 def get_patient_profile(nric: str, db: Session = Depends(get_db), session=Depends(require_auth(["patient"]))):
-    """Return the full patient profile matching an NRIC number."""
-    # Query patient by NRIC
     patient = db.query(patient_logic.Patient).filter(patient_logic.Patient.nric_number == nric).first()
     if not patient:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Patient not found")
 
-    # Convert related objects to simple lists/dicts for response
     major_surgeries = [
         {"surgery_name": s.surgery_name, "date": s.date, "additional_info": s.additional_info}
         for s in patient.major_surgeries
