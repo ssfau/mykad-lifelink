@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinic Staff Home | MyKad-LifeLink</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'gov-blue': '#003366',
+                        'gov-blue-light': '#E6F2FF',
+                        'medical-white': '#F8FAFC',
+                        'primary-blue': '#0066CC',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'brand': ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .action-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .action-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .lang-btn.active {
+            background: white;
+            color: #0066CC;
+            font-weight: 600;
+        }
+
+        .lang-btn:not(.active) {
+            background: transparent;
+            color: white;
+        }
+
+        .bottom-nav-item {
+            transition: all 0.2s ease;
+        }
+
+        .bottom-nav-item.active {
+            color: #0066CC;
+            background-color: #E6F2FF;
+            border-radius: 8px;
+        }
+
+        .bottom-nav-item.active i {
+            color: #0066CC;
+        }
+
+        .bottom-nav-item {
+            border-radius: 8px;
+        }
+
+        .bottom-nav-item:hover {
+            background-color: #F8FAFC;
+            transform: translateY(-2px);
+        }
+
+        .bottom-nav-item:not(.active):hover {
+            color: #0066CC;
+        }
+
+        .bottom-nav-item:not(.active):hover i {
+            color: #0066CC;
+        }
+
+        .lang-btn {
+            transition: all 0.2s ease;
+        }
+
+        .lang-btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="bg-medical-white min-h-screen flex flex-col">
+    <!-- Header Section -->
+    <header class="bg-gradient-to-br from-primary-blue via-gov-blue to-gov-blue relative overflow-hidden">
+        <!-- Decorative Background Elements -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-white opacity-5 rounded-full -mr-48 -mt-48"></div>
+        
+        <div class="relative z-10">
+            <!-- Top Row: Language Toggle and KKM Logo -->
+            <div class="max-w-7xl mx-auto px-8 pt-8 pb-4">
+                <div class="flex items-center justify-between">
+                    <!-- Left: Language Toggle -->
+                    <div class="flex items-center gap-2">
+                        <button id="lang-en" class="lang-btn active px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200" data-lang="en">
+                            EN
+                        </button>
+                        <button id="lang-bm" class="lang-btn px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200" data-lang="bm">
+                            BM
+                        </button>
+                    </div>
+
+                    <!-- Right: KKM Logo -->
+                    <div class="flex items-center gap-3">
+                        <img src="../assets/kkm-logo.png" alt="KKM Logo" class="h-16 w-auto filter brightness-0 invert" onerror="this.style.display='none'">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Welcome Section -->
+            <div class="max-w-5xl mx-auto px-8 pb-12">
+                <div class="text-white">
+                    <h1 class="text-4xl md:text-5xl font-bold">
+                        Welcome to LifeLink,<br>
+                        <span id="clinic-name" class="block mt-2">Clinic Staff</span>
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Authorization Banner -->
+    <div class="bg-blue-50 border-l-4 border-primary-blue py-3 px-6">
+        <div class="max-w-5xl mx-auto">
+            <div class="flex items-start gap-3">
+                <i class="fas fa-shield-alt text-primary-blue text-xl mt-1"></i>
+                <div class="flex-1">
+                    <p class="text-sm text-gray-700 mb-2">
+                        <strong>Authorized Clinic Access Only.</strong> Clinic accounts require strict government registration and verification. Any unauthorized access to patient IC (MyKad) information without proper consent is against the law and subject to legal penalties.
+                    </p>
+                    <p class="text-sm text-gray-700">
+                        <strong>Shared Account Notice:</strong> This is a shared clinic account. All actions require proper nurse/clinician identification and will be logged for audit purposes.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col items-center justify-center w-full px-8 py-12">
+        <!-- Cards Stack (Vertical) - Centered -->
+        <div class="space-y-6 max-w-[800px] w-full">
+            <!-- Patient Record Management Card -->
+            <div class="action-card bg-white rounded-2xl p-8 shadow-lg border border-gray-100 cursor-pointer" onclick="openPatientRecord()">
+                <div class="flex items-start gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center shadow-md">
+                            <i class="fas fa-file-medical text-white text-2xl"></i>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Patient Record Management</h3>
+                        <p class="text-gray-600 leading-relaxed mb-4">
+                            Scan MyKad to access patient records. Add presenting complaints and medicinal prescriptions. All actions require proper clinician identification.
+                        </p>
+                        <div class="flex items-center text-primary-blue font-semibold">
+                            <span>Scan MyKad & Manage Records</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audit Log Card -->
+            <div class="action-card bg-white rounded-2xl p-8 shadow-lg border border-gray-100 cursor-pointer" onclick="viewAuditLog()">
+                <div class="flex items-start gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-md">
+                            <i class="fas fa-clock text-white text-2xl"></i>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Audit Log</h3>
+                        <p class="text-gray-600 leading-relaxed mb-4">
+                            View clinic activity history. Track all patient record access and modifications performed by clinic staff.
+                        </p>
+                        <div class="flex items-center text-primary-blue font-semibold">
+                            <span>View Audit History</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex items-center justify-between">
+                <!-- Centered Navigation Items -->
+                <div class="flex items-center justify-center gap-12 flex-1">
+                    <a href="#" class="bottom-nav-item active flex flex-col items-center justify-center px-4 py-4">
+                        <i class="fas fa-home text-xl mb-1"></i>
+                        <span class="text-xs font-semibold">Home</span>
+                    </a>
+                    <a href="#" onclick="openPatientRecord(); return false;" class="bottom-nav-item flex flex-col items-center justify-center px-4 py-4 text-gray-600">
+                        <i class="fas fa-file-medical text-xl mb-1"></i>
+                        <span class="text-xs font-semibold">Patient Records</span>
+                    </a>
+                    <a href="#" onclick="viewAuditLog(); return false;" class="bottom-nav-item flex flex-col items-center justify-center px-4 py-4 text-gray-600">
+                        <i class="fas fa-clipboard-list text-xl mb-1"></i>
+                        <span class="text-xs font-semibold">Audit Logs</span>
+                    </a>
+                    <button onclick="contactKKM()" class="bottom-nav-item flex flex-col items-center justify-center px-4 py-4 text-gray-600">
+                        <i class="fas fa-headset text-xl mb-1"></i>
+                        <span class="text-xs font-semibold">Contact KKM</span>
+                    </button>
+                </div>
+
+                <!-- Team Signature - Far Right -->
+                <div class="flex flex-col items-center gap-2 pl-8 border-l border-gray-200">
+                    <img src="../assets/Logo.png" alt="Full Stack Alchemist" class="h-12 w-auto" onerror="this.style.display='none'">
+                    <div class="flex flex-col items-center">
+                        <span class="font-brand font-bold text-xs tracking-wider text-gray-900">FULL STACK</span>
+                        <span class="font-brand font-bold text-xs tracking-wider" style="color: #FFD700;">ALCHEMIST</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Padding for bottom nav -->
+    <div class="h-24"></div>
+
+    <script>
+        // Language Toggle Functionality
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.lang-btn').forEach(b => {
+                    b.classList.remove('active', 'bg-white', 'text-primary-blue');
+                    b.classList.add('bg-transparent', 'text-white');
+                });
+                this.classList.add('active', 'bg-white', 'text-primary-blue');
+                this.classList.remove('bg-transparent', 'text-white');
+                
+                const lang = this.dataset.lang;
+                updateLanguage(lang);
+            });
+        });
+
+        function updateLanguage(lang) {
+            const elements = {
+                welcome: lang === 'bm' ? 'Selamat Datang ke LifeLink' : 'Welcome to LifeLink',
+                clinicStaff: lang === 'bm' ? 'Kakitangan Klinik' : 'Clinic Staff',
+                patientRecordTitle: lang === 'bm' ? 'Pengurusan Rekod Pesakit' : 'Patient Record Management',
+                patientRecordDesc: lang === 'bm'
+                    ? 'Imbas MyKad untuk mengakses rekod pesakit. Tambah aduan semasa dan preskripsi ubat. Semua tindakan memerlukan pengenalan klinik yang betul.'
+                    : 'Scan MyKad to access patient records. Add presenting complaints and medicinal prescriptions. All actions require proper clinician identification.',
+                auditTitle: lang === 'bm' ? 'Log Audit' : 'Audit Log',
+                auditDesc: lang === 'bm'
+                    ? 'Lihat sejarah aktiviti klinik. Jejaki semua akses rekod pesakit dan pengubahsuaian yang dilakukan oleh kakitangan klinik.'
+                    : 'View clinic activity history. Track all patient record access and modifications performed by clinic staff.',
+                scanManage: lang === 'bm' ? 'Imbas MyKad & Urus Rekod' : 'Scan MyKad & Manage Records',
+                viewAudit: lang === 'bm' ? 'Lihat Sejarah Audit' : 'View Audit History'
+            };
+
+            // Update welcome message
+            const welcomeH1 = document.querySelector('header h1');
+            if (welcomeH1) {
+                welcomeH1.innerHTML = elements.welcome + ',<br><span id="clinic-name" class="block mt-2">' + (document.getElementById('clinic-name').textContent || 'Clinic Staff') + '</span>';
+            }
+
+            // Update card titles and descriptions
+            const cards = document.querySelectorAll('.action-card');
+            if (cards.length >= 2) {
+                // Patient Record Card
+                cards[0].querySelector('h3').textContent = elements.patientRecordTitle;
+                cards[0].querySelector('p').textContent = elements.patientRecordDesc;
+                cards[0].querySelector('.flex.items-center.text-primary-blue span').textContent = elements.scanManage;
+                
+                // Audit Card
+                cards[1].querySelector('h3').textContent = elements.auditTitle;
+                cards[1].querySelector('p').textContent = elements.auditDesc;
+                cards[1].querySelector('.flex.items-center.text-primary-blue span').textContent = elements.viewAudit;
+            }
+        }
+
+        // Load Clinic Name
+        function loadClinicName() {
+            const storedName = localStorage.getItem('clinicUsername') || 'Clinic Staff';
+            document.getElementById('clinic-name').textContent = storedName;
+        }
+
+        // Navigation Functions
+        function openPatientRecord() {
+            window.location.href = 'admin_patient_record.html';
+        }
+
+        function viewAuditLog() {
+            window.location.href = 'admin_audit.html';
+        }
+
+        function contactKKM() {
+            alert('KKM Official Enquiries & Emergency Support\n\nPhone: 03-XXXX XXXX\nEmail: support@kkm.gov.my\nOperating Hours: 24/7 for emergencies');
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadClinicName();
+        });
+    </script>
+</body>
+</html>
+

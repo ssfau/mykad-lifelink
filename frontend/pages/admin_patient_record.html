@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Record Management | MyKad-LifeLink</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'gov-blue': '#003366',
+                        'gov-blue-light': '#E6F2FF',
+                        'medical-white': '#F8FAFC',
+                        'primary-blue': '#0066CC',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'brand': ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .input-field {
+            transition: all 0.2s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #0066CC;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+
+        .scan-frame {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 200px;
+            border: 3px solid #0066CC;
+            border-radius: 12px;
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+        }
+
+        .scan-frame::before,
+        .scan-frame::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 4px solid #0066CC;
+        }
+
+        .scan-frame::before {
+            top: -4px;
+            left: -4px;
+            border-right: none;
+            border-bottom: none;
+            border-top-left-radius: 12px;
+        }
+
+        .scan-frame::after {
+            bottom: -4px;
+            right: -4px;
+            border-left: none;
+            border-top: none;
+            border-bottom-right-radius: 12px;
+        }
+
+        .step-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .complaint-item, .prescription-item {
+            transition: all 0.2s ease;
+        }
+
+        .complaint-item:hover, .prescription-item:hover {
+            background-color: #F8FAFC;
+        }
+    </style>
+</head>
+<body class="bg-medical-white min-h-screen flex flex-col">
+    <!-- Header Section -->
+    <header class="bg-gradient-to-br from-primary-blue via-gov-blue to-gov-blue relative overflow-hidden">
+        <!-- Decorative Background Elements -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-white opacity-5 rounded-full -mr-48 -mt-48"></div>
+        
+        <div class="relative z-10">
+            <!-- Top Row: Back Button and KKM Logo -->
+            <div class="w-full px-8 pt-8 pb-4">
+                <div class="flex items-center justify-between max-w-5xl mx-auto">
+                    <!-- Left: Back Button -->
+                    <a href="adminHomepage.html" class="text-white hover:text-blue-100 transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Back to Home
+                    </a>
+
+                    <!-- Right: KKM Logo -->
+                    <div class="flex items-center gap-3">
+                        <img src="../assets/kkm-logo.png" alt="KKM Logo" class="h-16 w-auto filter brightness-0 invert" onerror="this.style.display='none'">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Welcome Section -->
+            <div class="max-w-5xl mx-auto px-8 pb-12">
+                <div class="text-white">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-2">
+                        Patient Record Management
+                    </h1>
+                    <p class="text-lg text-white/90">
+                        Scan MyKad to access and update patient records
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 w-full px-8 py-12">
+        <div class="max-w-5xl mx-auto">
+            <!-- Step 1: MyKad Scan -->
+            <div id="step-1" class="step-card bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Scan Patient MyKad</h2>
+                
+                <div class="relative bg-gray-900 rounded-xl overflow-hidden mb-6" style="height: 400px;">
+                    <!-- Camera View (Mocked) -->
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="text-center text-white">
+                            <i class="fas fa-id-card text-6xl mb-4 opacity-50"></i>
+                            <p class="text-lg">Position patient's MyKad within the frame</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Scan Frame Overlay -->
+                    <div class="scan-frame"></div>
+                </div>
+
+                <button onclick="simulateScan()" class="w-full bg-primary-blue hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors shadow-md hover:shadow-lg text-lg">
+                    <i class="fas fa-qrcode mr-2"></i>
+                    Scan MyKad
+                </button>
+            </div>
+
+            <!-- Step 2: Patient Record View & Management -->
+            <div id="step-2" class="step-card bg-white rounded-2xl p-8 shadow-lg border border-gray-200 hidden">
+                <!-- Clinician Identification -->
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-semibold text-blue-900 mb-1">Logged in as:</p>
+                            <p class="text-gray-700" id="clinician-name">Nurse Siti Binti Ahmad</p>
+                        </div>
+                        <button onclick="changeClinician()" class="text-sm text-primary-blue hover:underline">
+                            Change Clinician
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Patient Basic Info (Read-only) -->
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-user-circle mr-3 text-primary-blue"></i>
+                        Patient Information
+                    </h3>
+                    <div class="bg-gray-50 rounded-lg p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm text-gray-600">Full Name</p>
+                            <p class="font-semibold text-gray-900" id="patient-name">Jamil Bin Abu</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">MyKad Number</p>
+                            <p class="font-semibold text-gray-900" id="patient-nric">900101-10-1234</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Date of Birth</p>
+                            <p class="font-semibold text-gray-900" id="patient-dob">01 January 1990</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Blood Type</p>
+                            <p class="font-semibold text-red-600" id="patient-blood">O+</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Critical Medical Info (Read-only, Non-sensitive) -->
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold text-red-600 mb-4 flex items-center">
+                        <i class="fas fa-exclamation-triangle mr-3"></i>
+                        Critical Medical Information
+                    </h3>
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4 space-y-3">
+                        <div>
+                            <p class="text-sm font-semibold text-red-800 mb-1">Allergies</p>
+                            <p class="text-gray-900" id="patient-allergies">Penicillin, Shellfish</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Note: Sensitive information such as chronic conditions, advanced directives, and risk factors are restricted to authorized doctors only.
+                    </p>
+                </div>
+
+                <!-- Add Presenting Complaint -->
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-stethoscope mr-3 text-primary-blue"></i>
+                        Add Presenting Complaint
+                    </h3>
+                    <div class="bg-white border border-gray-300 rounded-lg p-4">
+                        <textarea id="new-complaint" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none mb-3" rows="3" placeholder="Enter patient's presenting complaint..."></textarea>
+                        <button onclick="addComplaint()" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+                            <i class="fas fa-plus mr-2"></i>
+                            Add Complaint
+                        </button>
+                    </div>
+                    <div id="complaints-list" class="mt-4 space-y-2">
+                        <!-- Existing complaints will be listed here -->
+                    </div>
+                </div>
+
+                <!-- Add Prescription -->
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-pills mr-3 text-primary-blue"></i>
+                        Add Prescription
+                    </h3>
+                    <div class="bg-white border border-gray-300 rounded-lg p-4 space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                Medication Name
+                            </label>
+                            <input type="text" id="prescription-name" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" placeholder="e.g., Paracetamol 500mg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                Dosage
+                            </label>
+                            <input type="text" id="prescription-dose" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" placeholder="e.g., 2 tablets, twice daily">
+                        </div>
+                        <button onclick="addPrescription()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+                            <i class="fas fa-plus mr-2"></i>
+                            Add Prescription
+                        </button>
+                    </div>
+                    <div id="prescriptions-list" class="mt-4 space-y-2">
+                        <!-- Existing prescriptions will be listed here -->
+                    </div>
+                </div>
+
+                <!-- Save Button -->
+                <div class="flex gap-4 pt-4 border-t border-gray-200">
+                    <button onclick="goBackToScan()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 px-6 rounded-lg transition-colors">
+                        <i class="fas fa-redo mr-2"></i>
+                        Scan Another Patient
+                    </button>
+                    <button onclick="savePatientData()" class="flex-1 bg-primary-blue hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                        <i class="fas fa-save mr-2"></i>
+                        Save Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex items-center justify-between">
+                <!-- Empty center -->
+                <div class="flex items-center justify-center gap-12 flex-1">
+                </div>
+
+                <!-- Team Signature - Far Right -->
+                <div class="flex flex-col items-center gap-2 pl-8 border-l border-gray-200">
+                    <img src="../assets/Logo.png" alt="Full Stack Alchemist" class="h-12 w-auto" onerror="this.style.display='none'">
+                    <div class="flex flex-col items-center">
+                        <span class="font-brand font-bold text-xs tracking-wider text-gray-900">FULL STACK</span>
+                        <span class="font-brand font-bold text-xs tracking-wider" style="color: #FFD700;">ALCHEMIST</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Padding for bottom nav -->
+    <div class="h-24"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-2xl p-8 shadow-2xl text-center max-w-md mx-4">
+            <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-primary-blue mx-auto mb-4"></div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Saving Patient Data...</h3>
+            <p class="text-gray-600">Please wait while we update the patient records</p>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let scannedData = {};
+        let complaints = [];
+        let prescriptions = [];
+        let currentClinician = 'Nurse Siti Binti Ahmad';
+
+        // Simulate MyKad Scan
+        function simulateScan() {
+            // Simulate scanning delay
+            setTimeout(() => {
+                scannedData = {
+                    name: 'Jamil Bin Abu',
+                    nric: '900101-10-1234',
+                    dob: '01 January 1990',
+                    bloodType: 'O+',
+                    allergies: 'Penicillin, Shellfish'
+                };
+                loadPatientData();
+                nextStep(2);
+            }, 1500);
+        }
+
+        // Step Navigation
+        function nextStep(step) {
+            document.getElementById(`step-${currentStep}`).classList.add('hidden');
+            currentStep = step;
+            document.getElementById(`step-${currentStep}`).classList.remove('hidden');
+        }
+
+        // Load Patient Data
+        function loadPatientData() {
+            document.getElementById('patient-name').textContent = scannedData.name;
+            document.getElementById('patient-nric').textContent = scannedData.nric;
+            document.getElementById('patient-dob').textContent = scannedData.dob;
+            document.getElementById('patient-blood').textContent = scannedData.bloodType;
+            document.getElementById('patient-allergies').textContent = scannedData.allergies;
+            document.getElementById('clinician-name').textContent = currentClinician;
+            
+            // Load existing complaints and prescriptions (would come from backend)
+            renderComplaints();
+            renderPrescriptions();
+        }
+
+        // Change Clinician
+        function changeClinician() {
+            const newName = prompt('Enter clinician/nurse name:', currentClinician);
+            if (newName && newName.trim()) {
+                currentClinician = newName.trim();
+                document.getElementById('clinician-name').textContent = currentClinician;
+            }
+        }
+
+        // Add Complaint
+        function addComplaint() {
+            const complaintText = document.getElementById('new-complaint').value.trim();
+            if (!complaintText) {
+                alert('Please enter a presenting complaint.');
+                return;
+            }
+
+            const complaint = {
+                complaint: complaintText,
+                date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+                clinician: currentClinician
+            };
+
+            complaints.push(complaint);
+            document.getElementById('new-complaint').value = '';
+            renderComplaints();
+        }
+
+        // Render Complaints
+        function renderComplaints() {
+            const container = document.getElementById('complaints-list');
+            if (complaints.length === 0) {
+                container.innerHTML = '<p class="text-sm text-gray-500 italic">No complaints recorded yet.</p>';
+                return;
+            }
+
+            container.innerHTML = complaints.map((comp, index) => `
+                <div class="complaint-item bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <p class="text-gray-900 font-medium">${comp.complaint}</p>
+                            <p class="text-xs text-gray-500 mt-1">
+                                Added by ${comp.clinician} on ${comp.date}
+                            </p>
+                        </div>
+                        <button onclick="removeComplaint(${index})" class="text-red-600 hover:text-red-700 ml-4">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Remove Complaint
+        function removeComplaint(index) {
+            if (confirm('Are you sure you want to remove this complaint?')) {
+                complaints.splice(index, 1);
+                renderComplaints();
+            }
+        }
+
+        // Add Prescription
+        function addPrescription() {
+            const name = document.getElementById('prescription-name').value.trim();
+            const dose = document.getElementById('prescription-dose').value.trim();
+
+            if (!name || !dose) {
+                alert('Please enter both medication name and dosage.');
+                return;
+            }
+
+            const prescription = {
+                name: name,
+                dose: dose,
+                date: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+                clinician: currentClinician
+            };
+
+            prescriptions.push(prescription);
+            document.getElementById('prescription-name').value = '';
+            document.getElementById('prescription-dose').value = '';
+            renderPrescriptions();
+        }
+
+        // Render Prescriptions
+        function renderPrescriptions() {
+            const container = document.getElementById('prescriptions-list');
+            if (prescriptions.length === 0) {
+                container.innerHTML = '<p class="text-sm text-gray-500 italic">No prescriptions recorded yet.</p>';
+                return;
+            }
+
+            container.innerHTML = prescriptions.map((presc, index) => `
+                <div class="prescription-item bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <p class="text-gray-900 font-semibold">${presc.name}</p>
+                            <p class="text-gray-700 text-sm">${presc.dose}</p>
+                            <p class="text-xs text-gray-500 mt-1">
+                                Prescribed by ${presc.clinician} on ${presc.date}
+                            </p>
+                        </div>
+                        <button onclick="removePrescription(${index})" class="text-red-600 hover:text-red-700 ml-4">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Remove Prescription
+        function removePrescription(index) {
+            if (confirm('Are you sure you want to remove this prescription?')) {
+                prescriptions.splice(index, 1);
+                renderPrescriptions();
+            }
+        }
+
+        // Go back to scan
+        function goBackToScan() {
+            // Reset data
+            complaints = [];
+            prescriptions = [];
+            document.getElementById('new-complaint').value = '';
+            document.getElementById('prescription-name').value = '';
+            document.getElementById('prescription-dose').value = '';
+            nextStep(1);
+        }
+
+        // Save Patient Data
+        function savePatientData() {
+            if (complaints.length === 0 && prescriptions.length === 0) {
+                alert('Please add at least one complaint or prescription before saving.');
+                return;
+            }
+
+            const loadingOverlay = document.getElementById('loading-overlay');
+            loadingOverlay.classList.remove('hidden');
+
+            // Prepare data for backend (would send to API)
+            const patientData = {
+                nric: scannedData.nric,
+                complaints: complaints,
+                prescriptions: prescriptions,
+                clinician: currentClinician,
+                timestamp: new Date().toISOString()
+            };
+
+            // Log action (would be sent to backend)
+            console.log('Saving patient data:', patientData);
+
+            // Simulate API call
+            setTimeout(() => {
+                loadingOverlay.classList.add('hidden');
+                alert('Patient data saved successfully!\n\nComplaints and prescriptions have been added to the patient\'s medical records.');
+                
+                // Optionally go back to scan or stay on current view
+                // goBackToScan();
+            }, 1500);
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load clinician name from localStorage or prompt
+            const storedClinician = localStorage.getItem('currentClinician');
+            if (storedClinician) {
+                currentClinician = storedClinician;
+            }
+        });
+    </script>
+</body>
+</html>
+

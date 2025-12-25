@@ -1,63 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MyKad-LifeLink | Secure Medical Portal</title>
-    <link rel="stylesheet" href="css/style.css" />
-  </head>
-  <body>
-    <div class="landing-container">
-      <button id="dark-mode-toggle" class="theme-btn" aria-label="Toggle Dark Mode">
-         ☀️
-      </button>
-      <header >
-        <img
-          src="assets/Logo.png"
-          alt="MyKad-LifeLink Logo"
-          class="main-logo"
-        />
-        <h1>Welcome to MyKad-LifeLink</h1>
-        <p>Accessing life-saving data through your Malaysian Identity Card.</p>
-      </header>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'gov-blue': '#003366',
+                        'gov-blue-light': '#E6F2FF',
+                        'medical-white': '#F8FAFC',
+                        'primary-blue': '#0066CC',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'brand': ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
 
-      <main class="role-selection">
-        <h2>Please Select Your Role</h2>
-        <div class="card-grid">
-          <div
-            class="role-card patient"
-            onclick="location.href='loginPages/patientLogin.html'"
-          >
-            <div class="icon">👤</div>
-            <h3>Patient</h3>
-            <p>Register your MyKad and manage your medical consent.</p>
-          </div>
+        .role-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-          <div
-            class="role-card doctor"
-            onclick="location.href='loginPages/doctorLogin.html'"
-          >
-            <div class="icon">⚕️</div>
-            <h3>Medical Professional</h3>
-            <p>Emergency access to patient blood type and allergies.</p>
-          </div>
+        .role-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
 
-          <div
-            class="role-card admin"
-            onclick="location.href='loginPages/adminLogin.html'"
-          >
-            <div class="icon">🏢</div>
-            <h3>Clinic Staff</h3>
-            <p>Prescription management and hospital records.</p>
-          </div>
-        </div>
-      </main>
+        .role-card-icon {
+            transition: transform 0.3s ease;
+        }
 
-      <footer>
-        <p>&copy; 2025 NexG Godamlah 2.0 Hackathon | Team Full Stack Alchemist</p>
-      </footer>
+        .role-card:hover .role-card-icon {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center bg-white">
+    <!-- Top Right Dark Mode Toggle -->
+    <button id="dark-mode-toggle" class="fixed top-6 right-6 text-2xl text-gray-600 hover:text-gray-900 transition-colors z-50" aria-label="Toggle Dark Mode">
+        🌙
+    </button>
+
+    <div class="w-full max-w-6xl px-4 py-12 flex flex-col items-center justify-center">
+        <!-- Header Section -->
+        <header class="text-center mb-16">
+            <!-- Team Logo - Top Center -->
+            <div class="mb-8 flex justify-center">
+                <img src="assets/Logo.png" alt="Full Stack Alchemist Logo" class="h-24 w-auto" onerror="this.style.display='none'">
+            </div>
+            
+            <!-- Main Title -->
+            <h1 class="text-4xl md:text-5xl font-bold mb-4" style="color: #003366;">
+                Welcome to MyKad-LifeLink
+            </h1>
+            
+            <!-- Subtitle -->
+            <p class="text-lg md:text-xl text-gray-600 font-medium">
+                Accessing life-saving data through your Malaysian Identity Card.
+            </p>
+        </header>
+
+        <!-- Role Selection Cards - Horizontal Layout -->
+        <main class="w-full mb-16">
+            <div class="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8">
+                <!-- Patient Card -->
+                <div 
+                    class="role-card bg-white rounded-2xl p-8 shadow-lg border border-slate-200 cursor-pointer w-full md:w-80 text-center"
+                    onclick="location.href='loginPages/patientLogin.html'"
+                >
+                    <div class="mb-6 flex justify-center">
+                        <div class="role-card-icon w-20 h-20 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center shadow-md">
+                            <i class="fas fa-user text-white text-3xl"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Patient</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Register your MyKad and manage your medical consent.
+                    </p>
+                </div>
+
+                <!-- Medical Professional Card -->
+                <div 
+                    class="role-card bg-white rounded-2xl p-8 shadow-lg border border-slate-200 cursor-pointer w-full md:w-80 text-center"
+                    onclick="location.href='loginPages/doctorLogin.html'"
+                >
+                    <div class="mb-6 flex justify-center">
+                        <div class="role-card-icon w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center shadow-md">
+                            <i class="fas fa-stethoscope text-white text-3xl"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Medical Professional</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Emergency access to patient blood type and allergies.
+                    </p>
+                </div>
+
+                <!-- Clinic Staff Card -->
+                <div 
+                    class="role-card bg-white rounded-2xl p-8 shadow-lg border border-slate-200 cursor-pointer w-full md:w-80 text-center"
+                    onclick="location.href='loginPages/adminLogin.html'"
+                >
+                    <div class="mb-6 flex justify-center">
+                        <div class="role-card-icon w-20 h-20 bg-gradient-to-br from-gray-400 to-gray-600 rounded-2xl flex items-center justify-center shadow-md">
+                            <i class="fas fa-hospital text-white text-3xl"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Clinic Staff</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Prescription management and hospital records.
+                    </p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer / Trademark -->
+        <footer class="mt-auto">
+            <p class="text-center text-gray-500 text-sm md:text-base">
+                © 2025 NexG Godamlah 2.0 Hackathon | Team Full Stack Alchemist
+            </p>
+        </footer>
     </div>
-
-    <script src="js/ui.js"></script>
-  </body>
+</body>
 </html>
