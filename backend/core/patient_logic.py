@@ -89,15 +89,27 @@ class Patient(Base):
     sex: Mapped[str] = mapped_column(String, nullable=False)
     blood_type: Mapped[str] = mapped_column(String, nullable=False)
 
-    # JSON fields for prototype
     allergies: Mapped[Optional[List[str]]] = mapped_column(JSON, nullable=True)
     chronic_conditions: Mapped[Optional[List[str]]] = mapped_column(JSON, nullable=True)
     risk_factors: Mapped[Optional[List[str]]] = mapped_column(JSON, nullable=True)
     advanced_directives: Mapped[Optional[List[str]]] = mapped_column(JSON, nullable=True)
 
-    # Relationships
     major_surgeries: Mapped[List["PreviousMajorSurgeries"]] = relationship("PreviousMajorSurgeries", back_populates="patient")
     prescriptions: Mapped[List["MedicationPrescription"]] = relationship("MedicationPrescription", back_populates="patient")
     immunization: Mapped[List["Immunization"]] = relationship("Immunization", back_populates="patient")
     presenting_complaint: Mapped[List["PresentingComplaint"]] = relationship("PresentingComplaint", back_populates="patient")
     emergency_contacts: Mapped[List["EmergencyContact"]] = relationship("EmergencyContact", back_populates="patient")
+
+# non critical data sending
+
+class PatientRegistrationConfirm(BaseModel):
+    full_name: str
+    birth_date: date
+    nric_number: str
+    sex: str
+
+    blood_type: str
+    allergies: Optional[List[str]] = None
+    chronic_conditions: Optional[List[str]] = None
+    risk_factors: Optional[List[str]] = None
+    emergency_contacts: Optional[List[str]] = None

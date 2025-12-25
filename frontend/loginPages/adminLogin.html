@@ -24,7 +24,7 @@
             <div id="errorMsg" style="color: var(--emergency-red); display: none; font-size: 0.95rem;"></div>
 
             <button type="submit" class="role-card admin" style="padding: 15px; background: #555; color: white;">SIGN IN</button>
-            <button id="dark-mode-toggle" aria-label="Toggle Dark Mode">🌓</button>
+            <button id="dark-mode-toggle" aria-label="Toggle Dark Mode">☀️</button>
         </form>
     </div>
 
@@ -59,7 +59,8 @@
                 }
 
                 // Call backend mock login for clinic_admin role
-                const resp = await ApiService.login('clinic_admin');
+                // Mock login requires user_id (int) and role (str)
+                const resp = await ApiService.login(1, 'clinic_admin');
 
                 if (resp && resp.access_token) {
                     // Save token and role
