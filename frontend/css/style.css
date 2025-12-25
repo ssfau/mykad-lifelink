@@ -172,8 +172,8 @@ footer {
 /* ============================================================ */
 #back-link {
     position: absolute; /* Positioned relative to landing container */
-    top: 1em;
     left: 1em;
+    top: 0.8em;
     text-decoration: none;
     color: var(--primary-blue);
     font-weight: 500;
@@ -609,4 +609,23 @@ body.dark-mode textarea::placeholder {
         font-size: 1rem;
         padding: 10px 12px;
     }
+}
+
+
+body.dark-mode #back-link-patient {
+    color: var(--primary-blue);
+}
+
+#back-link-patient {
+    text-decoration: none;
+    color: var(--primary-blue);
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+#back-link-patient:hover,
+#back-link-patient:active {
+    color: var(--emergency-red);
+    transform: translateX(-5px);
+    letter-spacing: 1px;
 }
