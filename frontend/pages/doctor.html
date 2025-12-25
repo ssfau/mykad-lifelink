@@ -77,14 +77,14 @@
 
     <script src="../js/api.js"></script>
     <script>
-        // Simple client-side guard: redirect to doctor login if not authenticated
-        (function(){
-            const token = localStorage.getItem('access_token');
-            const role = localStorage.getItem('role');
-            if (!token || role !== 'doctor') {
-                window.location.href = '../loginPages/doctorLogin.html';
-            }
-        })();
+        // // Simple client-side guard: redirect to doctor login if not authenticated
+        // (function(){
+        //     const token = localStorage.getItem('access_token');
+        //     const role = localStorage.getItem('role');
+        //     if (!token || role !== 'doctor') {
+        //         window.location.href = '../loginPages/doctorLogin.html';
+        //     }
+        // })();
     </script>
 
     <script src="../js/ui.js" defer></script>

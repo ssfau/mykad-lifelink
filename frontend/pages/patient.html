@@ -2,56 +2,69 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Patient Registration | MyKad-LifeLink</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <title>My Medical Profile | MyKad-LifeLink</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <div class="landing-container" style="min-height: 100vh; overflow-y: auto;">
-        <header>
-            <a href="../index.html" id="back-link">← Back</a>
-            <h1>Patient Portal</h1>
-            <p>Update your emergency medical profile.</p>
-        </header>
 
-        <form id="patientForm" style="display: flex; flex-direction: column; gap: 15px; text-align: left;">
-            <label>Full Name</label>
-            <input type="text" placeholder="Enter name as per MyKad" required style="padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+<div class="landing-container-patient" style="min-height:100vh;">
+    <header>
+        <button id="dark-mode-toggle" aria-label="Toggle Dark Mode">🌓</button>
+        <a href="../index.html" id="back-link">← Back</a>
+        <h1>My Medical Profile</h1>
+        <p>This information is retrieved directly from the medical database.</p>
+    </header>
 
-            <label>MyKad Number</label>
-            <input type="text" placeholder="XXXXXX-XX-XXXX" required style="padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+    <!-- BASIC INFO -->
+    <section class="profile-card">
+        <h2>Basic Information</h2>
+        <p><strong>Full Name:</strong> <span id="full_name">—</span></p>
+        <p><strong>NRIC:</strong> <span id="nric_number">—</span></p>
+        <p><strong>Date of Birth:</strong> <span id="birth_date">—</span></p>
+        <p><strong>Sex:</strong> <span id="sex">—</span></p>
+        <p><strong>Blood Type:</strong> <span id="blood_type">—</span></p>
+    </section>
 
-            <label>Select Blood Type</label>
-            <select style="padding: 10px; border-radius: 5px;">
-                <option>A+</option><option>A-</option><option>B+</option>
-                <option>B-</option><option>O+</option><option>O-</option>
-                <option>AB+</option><option>AB-</option>
-            </select>
+    <!-- MEDICAL DETAILS -->
+    <section class="profile-card">
+        <h2>Medical Details</h2>
+        <p><strong>Allergies:</strong> <span id="allergies">—</span></p>
+        <p><strong>Chronic Conditions:</strong> <span id="chronic_conditions">—</span></p>
+        <p><strong>Risk Factors:</strong> <span id="risk_factors">—</span></p>
+        <p><strong>Advanced Directives:</strong> <span id="advanced_directives">—</span></p>
+    </section>
 
-            <label>Known Allergies</label>
-            <textarea placeholder="e.g. Penicillin, Peanuts" style="padding: 10px; border-radius: 5px; border: 1px solid #ddd;"></textarea>
+    <!-- LIST SECTIONS -->
+    <section class="profile-card">
+        <h2>Major Surgeries</h2>
+        <ul id="major_surgeries"></ul>
+    </section>
 
-            <div style="display: flex; gap: 10px; align-items: flex-start; background: #f9f9f9; padding: 10px; border-radius: 5px;">
-                <input type="checkbox" id="consent" required>
-                <label for="consent" style="font-size: 0.85rem;">I agree to allow medical staff to access this data during emergencies using my MyKad.</label>
-            </div>
+    <section class="profile-card">
+        <h2>Medications</h2>
+        <ul id="prescriptions"></ul>
+    </section>
 
-            <button type="submit" class="role-card patient" style="padding: 15px; background: var(--primary-blue); color: white;">SAVE PROFILE</button>
-            <button id="dark-mode-toggle" aria-label="Toggle Dark Mode">🌓</button>
+    <section class="profile-card">
+        <h2>Immunizations</h2>
+        <ul id="immunization"></ul>
+    </section>
 
-        </form>
-    </div>
-    <script src="../js/api.js"></script>
-    <script>
-        // Simple client-side guard: redirect to patient login if not authenticated
-        (function(){
-            const token = localStorage.getItem('access_token');
-            const role = localStorage.getItem('role');
-            if (!token || role !== 'patient') {
-                window.location.href = '../loginPages/patientLogin.html';
-            }
-        })();
-    </script>
-    <script src="../js/ui.js"></script>
+    <section class="profile-card">
+        <h2>Presenting Complaints</h2>
+        <ul id="presenting_complaint"></ul>
+    </section>
+
+    <section class="profile-card">
+        <h2>Emergency Contacts</h2>
+        <ul id="emergency_contacts"></ul>
+    </section>
+
+</div>
+
+<script src="../js/api.js"></script>
+<script src="../js/profile.js"></script>
+<script src="../js/ui.js"></script>
 </body>
 </html>
