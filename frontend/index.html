@@ -46,12 +46,69 @@
         .role-card:hover .role-card-icon {
             transform: scale(1.1);
         }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+        }
+
+        body.dark-mode .bg-white {
+            background-color: #2d2d2d !important;
+            border-color: #444 !important;
+            color: #f0f0f0;
+        }
+
+        body.dark-mode .role-card {
+            background-color: #2d2d2d !important;
+            border-color: #444 !important;
+        }
+
+        body.dark-mode .role-card h3 {
+            color: #f0f0f0 !important;
+        }
+
+        body.dark-mode .role-card p {
+            color: #d1d5db !important;
+        }
+
+        body.dark-mode h1 {
+            color: #f0f0f0 !important;
+        }
+
+        body.dark-mode .text-gray-600 {
+            color: #d1d5db !important;
+        }
+
+        body.dark-mode footer p {
+            color: #9ca3af !important;
+        }
+
+        body.dark-mode #dark-mode-toggle {
+            color: #f0f0f0;
+        }
+
+        body.dark-mode #dark-mode-toggle:hover {
+            color: #d1d5db;
+        }
+
+        #dark-mode-toggle {
+            transition: transform 0.2s ease;
+        }
+
+        #dark-mode-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        #dark-mode-toggle:active {
+            transform: scale(0.9);
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center bg-white">
     <!-- Top Right Dark Mode Toggle -->
     <button id="dark-mode-toggle" class="fixed top-6 right-6 text-2xl text-gray-600 hover:text-gray-900 transition-colors z-50" aria-label="Toggle Dark Mode">
-        🌙
+        ☀️
     </button>
 
     <div class="w-full max-w-6xl px-4 py-12 flex flex-col items-center justify-center">
@@ -133,5 +190,45 @@
             </p>
         </footer>
     </div>
+
+    <script>
+        // Dark Mode Toggle - Applied immediately to prevent flash
+        (function() {
+            const darkMode = localStorage.getItem('dark-mode');
+            if (darkMode === 'enabled') {
+                document.body.classList.add('dark-mode');
+            }
+        })();
+
+        // Dark Mode Toggle Handler
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('dark-mode-toggle');
+            const body = document.body;
+
+            // Check for saved user preference and apply immediately
+            const darkMode = localStorage.getItem('dark-mode');
+            if (darkMode === 'enabled') {
+                body.classList.add('dark-mode');
+                if (toggleBtn) toggleBtn.textContent = '🌙'; // Moon emoji when in dark mode
+            } else {
+                if (toggleBtn) toggleBtn.textContent = '☀️'; // Sun emoji when in light mode
+            }
+
+            // Add event listener
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', () => {
+                    body.classList.toggle('dark-mode');
+                    
+                    if (body.classList.contains('dark-mode')) {
+                        localStorage.setItem('dark-mode', 'enabled');
+                        toggleBtn.textContent = '🌙'; // Show moon when in dark mode
+                    } else {
+                        localStorage.setItem('dark-mode', 'disabled');
+                        toggleBtn.textContent = '☀️'; // Show sun when in light mode
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

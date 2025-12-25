@@ -181,6 +181,16 @@ const ApiService = {
      */
     async patientInitialScan(file) {
         try {
+            // Validate file
+            if (!file) {
+                throw new Error('No file selected');
+            }
+
+            // Check file type
+            if (!file.type || !file.type.startsWith('image/')) {
+                throw new Error('Please select an image file');
+            }
+
             const formData = new FormData();
             formData.append('file', file);
 
@@ -195,8 +205,25 @@ const ApiService = {
             return await handledResponse.json();
         } catch (error) {
             console.error("API Error (Patient Initial Scan):", error);
-            alert(`Scan failed: ${error.message}`);
-            return null;
+            
+            // Provide more helpful error messages for network/connection errors
+            let errorMessage = error.message || 'Unknown error occurred';
+            const errorType = error.constructor.name;
+            const errorString = String(error);
+            
+            // Check for network/connection errors
+            // fetch() throws TypeError with "Failed to fetch" when connection is refused
+            if (errorType === 'TypeError' && 
+                (errorMessage.includes('fetch') || errorString.includes('Failed to fetch'))) {
+                errorMessage = 'Cannot connect to the server. Please make sure the backend server is running on http://127.0.0.1:8000. Start it using: python start_server.py';
+            } else if (errorMessage.includes('ERR_CONNECTION_REFUSED') || 
+                       errorMessage.includes('NetworkError') ||
+                       errorMessage.includes('Failed to fetch') ||
+                       errorString.includes('ERR_CONNECTION_REFUSED')) {
+                errorMessage = 'Cannot connect to the server. Please make sure the backend server is running on http://127.0.0.1:8000. Start it using: python start_server.py';
+            }
+            
+            throw new Error(errorMessage);
         }
     },
 
