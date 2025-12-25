@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from datetime import date
+from datetime import date as date_type
 from typing import List, Optional
 
 #################################
@@ -12,30 +12,30 @@ from typing import List, Optional
 
 class PreviousMajorSurgeries(BaseModel):
     surgery_name: str = Field(..., examples=["kidney transplant"])
-    date: date = Field(...)
+    date: date_type = Field(...)
     additional_info: str = Field(..., examples=["surgery successful at hsaas"])
 
 class MedicationPrescription(BaseModel):
     prescription_name: str = Field(..., examples=["paracetamol 500mg"])
     prescription_dose: str = Field(..., examples=["3x a day after eating"])
-    date: date = Field(...)
+    date: date_type = Field(...)
     additional_info: str = Field(..., examples=["given from clinic ammar"])
 
 class Immunization(BaseModel):
     immunization_name: str = Field(..., examples=["h5n1 vaccine"])
-    date: date = Field(...)
+    date: date_type = Field(...)
     additional_info: str = Field(..., examples=["booster dose"])
 
 class PresentingComplaint(BaseModel):
     complaint: str = Field(..., examples=["h5n1 vaccine"])
-    date: date = Field(...)
+    date: date_type = Field(...)
     additional_info: str = Field(..., examples=["booster dose"])
 
 class EmergencyContact(BaseModel):
     name: str = Field(..., examples=["h5n1 vaccine"])
     contact_number: str = Field(..., examples=["+604102980415921321"])
     address: str = Field(..., examples=["jalan 5 batu bandar seri petaling"])
-    date_added: date = Field(...)
+    date_added: date_type = Field(...)
     additional_info: str = Field(..., examples=["son", "father"])
 
 
@@ -43,7 +43,7 @@ class EmergencyContact(BaseModel):
 
 class PatientDataBase(BaseModel):
     full_name: str = Field(..., examples=["ALI BIN ABU"]) 
-    birth_date: date = Field(...) 
+    birth_date: date_type = Field(...) 
     nric_number: str = Field(..., examples=["061111111111"]) 
     sex: str = Field(..., examples=["male", "female"]) 
     blood_type: str = Field(..., examples=["O-"])
@@ -71,7 +71,7 @@ class PatientDataResponse(PatientDataBase):
 class ClinicPatientViewResponse(BaseModel):
     full_name: str
     sex: str
-    birth_date: date
+    birth_date: date_type
     nric_number: str
 
     prescriptions: list[MedicationPrescription] | None = None

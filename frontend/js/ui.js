@@ -20,33 +20,84 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnText = document.getElementById('btnText');
     const loader = document.getElementById('loader');
 
-    if (scanBtn) {
-        scanBtn.addEventListener('click', async () => {
+    // Create hidden file input for MyKad image upload
+    let fileInput = null;
+    if (scanBtn && scanInterface) {
+        fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = 'image/*';
+        fileInput.style.display = 'none';
+        scanInterface.appendChild(fileInput);
+
+        fileInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
             // Visual feedback: Start scanning
-            btnText.innerText = "COMMUNICATING WITH CHIP...";
+            btnText.innerText = "PROCESSING MYKAD...";
             scanBtn.classList.add('pulse-btn');
             loader.classList.remove('hidden');
 
-            // Call the Python Backend (api.js)
-            const data = await ApiService.scanMyKad();
+            try {
+                // Step 1: Scan MyKad to get OCR data (nric, name, raw_ocr)
+                const ocrData = await ApiService.doctorScanMyKad(file);
+                
+                if (!ocrData || !ocrData.nric) {
+                    throw new Error('Could not extract NRIC from MyKad image');
+                }
 
-            if (data) {
-                // Success: Populate the UI
-                document.getElementById('patientNameDisplay').innerText = data.name || "N/A";
-                document.getElementById('patientICDisplay').innerText = data.ic || "N/A";
-                document.getElementById('patientBlood').innerText = data.blood_group || "--";
-                document.getElementById('patientAllergies').innerText = data.allergies || "NONE";
-                document.getElementById('patientChronic').innerText = data.chronic_diseases || "None Reported";
+                // Step 2: Use the extracted NRIC to fetch patient profile
+                const patientData = await ApiService.doctorGetPatientProfile(ocrData.nric);
 
-                // Switch Views
-                scanInterface.classList.add('hidden');
-                resultInterface.classList.remove('hidden');
-            } else {
+                if (patientData) {
+                    // Success: Populate the UI with patient data
+                    // Note: doctor.html doesn't have patientNameDisplay/patientICDisplay, using the available IDs
+                    const patientAllergies = patientData.allergies && patientData.allergies.length > 0 
+                        ? patientData.allergies.join(', ') 
+                        : "NONE";
+                    const patientChronic = patientData.chronic_conditions && patientData.chronic_conditions.length > 0
+                        ? patientData.chronic_conditions.join(', ')
+                        : "None Reported";
+
+                    document.getElementById('patientAllergies').innerText = patientAllergies;
+                    document.getElementById('patientBlood').innerText = patientData.blood_type || "--";
+                    document.getElementById('patientChronic').innerText = patientChronic;
+
+                    // Additional notes could include other critical info
+                    let additionalNotes = [];
+                    if (patientData.risk_factors && patientData.risk_factors.length > 0) {
+                        additionalNotes.push(`Risk Factors: ${patientData.risk_factors.join(', ')}`);
+                    }
+                    if (patientData.advanced_directives && patientData.advanced_directives.length > 0) {
+                        additionalNotes.push(`Directives: ${patientData.advanced_directives.join(', ')}`);
+                    }
+                    document.getElementById('additionalNotes').innerText = additionalNotes.length > 0 
+                        ? additionalNotes.join(' | ') 
+                        : "No critical alerts.";
+
+                    // Switch Views
+                    scanInterface.classList.add('hidden');
+                    resultInterface.classList.remove('hidden');
+                } else {
+                    // Patient not found in database - show OCR data only
+                    alert(`Patient with NRIC ${ocrData.nric} not found in database.`);
+                    btnText.innerText = "RETRY SCAN";
+                    loader.classList.add('hidden');
+                }
+            } catch (error) {
                 // Error handling
-                alert("MyKad Connection Error. Please re-insert card.");
+                alert(`MyKad Scan Error: ${error.message}`);
                 btnText.innerText = "RETRY SCAN";
                 loader.classList.add('hidden');
+            } finally {
+                // Reset file input
+                fileInput.value = '';
             }
+        });
+
+        // When scan button is clicked, trigger file input
+        scanBtn.addEventListener('click', () => {
+            fileInput.click();
         });
     }
 
@@ -56,27 +107,60 @@ document.addEventListener('DOMContentLoaded', () => {
         patientForm.addEventListener('submit', async (e) => {
             e.preventDefault(); // Stop page from refreshing
             
-            const submitBtn = patientForm.querySelector('button');
+            const submitBtn = patientForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerText;
             submitBtn.innerText = "UPLOADING TO SECURE SERVER...";
             submitBtn.disabled = true;
 
-            // Collect data from the form
-            const formData = {
-                name: patientForm.querySelector('input[type="text"]').value,
-                ic: patientForm.querySelectorAll('input[type="text"]')[1].value,
-                blood_group: patientForm.querySelector('select').value,
-                allergies: patientForm.querySelector('textarea').value,
-                consent: document.getElementById('consent').checked
-            };
+            try {
+                // Collect data from the form matching PatientRegistrationConfirm schema
+                const allergiesText = document.getElementById('allergies')?.value.trim() || '';
+                const chronicConditionsText = document.getElementById('chronic_conditions')?.value.trim() || '';
+                const riskFactorsText = document.getElementById('risk_factors')?.value.trim() || '';
 
-            const result = await ApiService.registerPatient(formData);
+                // Convert comma-separated strings to arrays, filtering out empty values
+                const allergies = allergiesText ? allergiesText.split(',').map(s => s.trim()).filter(s => s) : null;
+                const chronicConditions = chronicConditionsText ? chronicConditionsText.split(',').map(s => s.trim()).filter(s => s) : null;
+                const riskFactors = riskFactorsText ? riskFactorsText.split(',').map(s => s.trim()).filter(s => s) : null;
 
-            if (result.success) {
-                alert("Registration Successful! Your MyKad is now linked.");
-                window.location.href = "../index.html"; // Redirect home
-            } else {
-                alert("Error: " + result.message);
-                submitBtn.innerText = "SAVE PROFILE";
+                const registrationData = {
+                    full_name: document.getElementById('full_name').value.trim(),
+                    nric_number: document.getElementById('nric_number').value.trim(),
+                    birth_date: document.getElementById('birth_date').value, // YYYY-MM-DD format
+                    sex: document.getElementById('sex').value,
+                    blood_type: document.getElementById('blood_type').value,
+                    allergies: allergies && allergies.length > 0 ? allergies : null,
+                    chronic_conditions: chronicConditions && chronicConditions.length > 0 ? chronicConditions : null,
+                    risk_factors: riskFactors && riskFactors.length > 0 ? riskFactors : null,
+                    emergency_contacts: null // Not collected in initial registration form
+                };
+
+                // Check consent
+                if (!document.getElementById('consent').checked) {
+                    alert("Please agree to the consent form to proceed.");
+                    submitBtn.innerText = originalText;
+                    submitBtn.disabled = false;
+                    return;
+                }
+
+                const result = await ApiService.patientConfirmRegistration(registrationData);
+
+                if (result && (result.status === 'created' || result.status === 'exists')) {
+                    alert(`Registration ${result.status === 'created' ? 'Successful' : 'Info'}: ${result.message}`);
+                    if (result.status === 'created') {
+                        window.location.href = "../index.html"; // Redirect home
+                    } else {
+                        submitBtn.innerText = originalText;
+                        submitBtn.disabled = false;
+                    }
+                } else {
+                    alert("Error: " + (result?.message || "Registration failed"));
+                    submitBtn.innerText = originalText;
+                    submitBtn.disabled = false;
+                }
+            } catch (error) {
+                alert("Error: " + error.message);
+                submitBtn.innerText = originalText;
                 submitBtn.disabled = false;
             }
         });

@@ -47,10 +47,6 @@
                     return;
                 }
 
-                 if(username === "nabilhazmi" && password === "@Nabil13"){
-                    window.location.href = "../pages/patient.html";
-                }
-
                 // Basic demo credentials (replace with real backend auth as needed)
                 if (username !== '123456-78-9012' || password !== 'patient123') {
                     errorMsg.innerText = 'Invalid credentials.';
@@ -59,7 +55,8 @@
                 }
 
                 // Call backend mock login for patient role
-                const resp = await ApiService.login('patient');
+                // Mock login requires user_id (int) and role (str)
+                const resp = await ApiService.login(1, 'patient');
 
                 if (resp && resp.access_token) {
                     // Save token and role

@@ -59,7 +59,8 @@
                 }
 
                 // Call backend mock login for doctor role
-                const resp = await ApiService.login('doctor');
+                // Mock login requires user_id (int) and role (str)
+                const resp = await ApiService.login(1, 'doctor');
 
                 if (resp && resp.access_token) {
                     // Save token and role
