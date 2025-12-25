@@ -27,7 +27,7 @@
         <header>
             <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                 <a href="../index.html" id="back-link">← Exit</a>
-                <span id="systemClock" style="font-family: monospace; color: #666;">--:--:--</span>
+                <span id="systemClock" style="font-family: monospace; color: #666;"></span>
             </div>
             <h1>Emergency Response</h1>
             <p id="instructionText">Place MyKad on reader to begin extraction.</p>
@@ -74,6 +74,18 @@
 
     <!-- Optional: Dark Mode Toggle Button -->
     <button id="dark-mode-toggle" aria-label="Toggle Dark Mode">🌓</button>
+
+    <script src="../js/api.js"></script>
+    <script>
+        // Simple client-side guard: redirect to doctor login if not authenticated
+        (function(){
+            const token = localStorage.getItem('access_token');
+            const role = localStorage.getItem('role');
+            if (!token || role !== 'doctor') {
+                window.location.href = '../loginPages/doctorLogin.html';
+            }
+        })();
+    </script>
 
     <script src="../js/ui.js" defer></script>
 </body>
