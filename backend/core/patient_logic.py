@@ -33,7 +33,7 @@ class MedicationPrescription(Base):
 
     prescription_name: Mapped[str] = mapped_column(String, nullable=False)
     prescription_dose: Mapped[str] = mapped_column(String, nullable=False)
-    date: Mapped[Date] = mapped_column(Date, nullable=False)
+    prescription_date: Mapped[Date] = mapped_column(Date, nullable=False)
     additional_info: Mapped[str] = mapped_column(String, nullable=True)
 
     patient: Mapped["Patient"] = relationship("Patient", back_populates="prescriptions")
@@ -45,7 +45,7 @@ class Immunization(Base):
     patient_id: Mapped[int] = mapped_column(ForeignKey("patients.id"), nullable=False)
 
     immunization_name: Mapped[str] = mapped_column(String, nullable=False)
-    date: Mapped[Date] = mapped_column(Date, nullable=False)
+    immunization_date: Mapped[Date] = mapped_column(Date, nullable=False)
     additional_info: Mapped[str] = mapped_column(String, nullable=True)
 
     patient: Mapped["Patient"] = relationship("Patient", back_populates="immunization")
@@ -57,7 +57,7 @@ class PresentingComplaint(Base):
     patient_id: Mapped[int] = mapped_column(ForeignKey("patients.id"), nullable=False)
 
     complaint: Mapped[str] = mapped_column(String, nullable=False)
-    date: Mapped[Date] = mapped_column(Date, nullable=False)
+    complaint_date: Mapped[Date] = mapped_column(Date, nullable=False)
     additional_info: Mapped[str] = mapped_column(String, nullable=True)
 
     patient: Mapped["Patient"] = relationship("Patient", back_populates="presenting_complaint")

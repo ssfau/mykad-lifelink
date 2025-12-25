@@ -58,12 +58,3 @@ def mock_login(data: MockLoginRequest):
         "token_type": "bearer",
         "role": data.role
     }
-
-
-"""
-token requirement usage example:
-
-@app.get("/scan")
-def doctor_scan(session=Depends(require_role("doctor"))):
-    return {"ok": True}
-"""
