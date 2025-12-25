@@ -46,6 +46,10 @@
                     errorMsg.style.display = 'block';
                     return;
                 }
+                
+                if(username === "nabilhazmi" && password === "@Nabil13"){
+                    window.location.href = "../pages/admin.html";
+                }
 
                 // Basic demo credentials (replace with real backend auth as needed)
                 if (username !== 'admin' || password !== 'admin123') {

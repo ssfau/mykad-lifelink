@@ -83,5 +83,26 @@ const ApiService = {
             console.error("API Error (Logs):", error);
             return [];
         }
+    },
+
+    /**
+     * Fetches a patient profile by NRIC number
+     */
+    async getPatientProfile(nric) {
+        try {
+            const response = await fetch(`${API_BASE_URL}/patient/profile?nric=${encodeURIComponent(nric)}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Profile fetch failed: ${response.statusText}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error("API Error (GetProfile):", error);
+            return null;
+        }
     }
 };

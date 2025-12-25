@@ -329,6 +329,116 @@ body.dark-mode .role-card.admin:active {
 }
 
 /* ============================================================ */
+/* PATIENT PAGE - FULLSCREEN CARD & THEME SUPPORT */
+/* ============================================================ */
+.landing-container-patient {
+    width: 100vw;
+    min-height: 100vh;
+    height: 100vh;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    align-items: stretch;
+    background: var(--white-overlay);
+    overflow-y: auto; /* Allow scrolling for long profiles */
+    position: relative;
+}
+
+/* Make each profile card stretch full width and look like a tile */
+.profile-card {
+    background: var(--bg-card);
+    color: var(--text-dark);
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.06);
+    width: 100%;
+}
+
+/* Headings and spacing */
+.profile-card h2 {
+    color: var(--primary-blue);
+    margin-bottom: 8px;
+    font-size: 1.25rem;
+}
+
+/* Text inside with aligned label/value pairs */
+.profile-card p {
+    display: flex;
+    gap: 8px; /* slightly tighter gap since labels are right-aligned */
+    align-items: flex-start;
+    margin: 6px 0;
+    line-height: 1.4;
+}
+
+.profile-card p strong {
+    min-width: 180px; /* wider fixed label column so dashes align */
+    display: inline-block;
+    font-weight: 600;
+    color: var(--primary-blue);
+    text-align: right; /* right-align labels to line up with values */
+    padding-right: 12px; /* extra spacing between label and value */
+}
+
+.profile-card p span {
+    flex: 1; /* value column grows */
+    color: var(--text-dark);
+}
+
+/* Placeholder styling for empty values */
+.profile-card p span:empty {
+    color: #777;
+    font-style: italic;
+}
+
+/* Mobile: stack label above value for narrow screens */
+@media (max-width: 480px) {
+    .profile-card p { flex-direction: column; gap: 6px; }
+    .profile-card p strong { min-width: 0; text-align: left; padding-right: 0; }
+}
+
+/* Lists inside profile cards */
+.profile-card ul {
+    list-style: disc;
+    padding-left: 1.25rem;
+    margin: 0.5rem 0;
+}
+
+/* Empty state */
+.profile-card ul:empty::before {
+    content: "None recorded";
+    color: #777;
+    font-style: italic;
+}
+
+/* Emergency contacts—compact list */
+#emergency_contacts li {
+    padding: 6px 0;
+    border-bottom: 1px dashed rgba(0,0,0,0.06);
+}
+
+/* Responsive spacing for very small screens */
+@media (max-width: 600px) {
+    .landing-container-patient { padding: 14px; }
+    .profile-card { padding: 16px; border-radius: 8px; }
+    header h1 { font-size: 1.6rem; }
+}
+
+/* Dark mode support for patient page */
+body.dark-mode .landing-container-patient {
+    background: var(--white-overlay);
+}
+body.dark-mode .profile-card {
+    background: var(--bg-card);
+    border-color: rgba(255,255,255,0.04);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+}
+body.dark-mode .profile-card h2 { color: var(--primary-blue); }
+body.dark-mode .profile-card p { color: var(--text-dark); opacity: 0.95; }
+body.dark-mode .profile-card ul:empty::before { color: #aaa; }
+
+/* ============================================================ */
 /* 18. DARK MODE INPUTS / TEXTAREAS */
 /* ============================================================ */
 body.dark-mode input,

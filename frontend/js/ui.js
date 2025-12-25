@@ -82,6 +82,61 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- 2b. LOAD EXISTING PATIENT PROFILE ---
+    const loadBtn = document.getElementById('loadProfileBtn');
+    const profileSummary = document.getElementById('profileSummary');
+
+    if (loadBtn) {
+        loadBtn.addEventListener('click', async () => {
+            const ic = document.getElementById('icNumber').value.trim();
+            if (!ic) { alert('Please enter your NRIC to load the profile.'); return; }
+
+            loadBtn.disabled = true;
+            loadBtn.innerText = 'LOADING...';
+
+            const data = await ApiService.getPatientProfile(ic);
+
+            loadBtn.disabled = false;
+            loadBtn.innerText = 'LOAD PROFILE';
+
+            if (!data) {
+                alert('Profile not found or server error.');
+                return;
+            }
+
+            // Show summary at top
+            if (profileSummary) profileSummary.style.display = 'block';
+            document.getElementById('patientNameDisplay').innerText = data.full_name || 'N/A';
+            document.getElementById('patientICDisplay').innerText = data.nric_number || 'N/A';
+            document.getElementById('patientBlood').innerText = data.blood_type || '--';
+            document.getElementById('patientAllergies').innerText = (data.allergies && data.allergies.length) ? data.allergies.join(', ') : 'NONE';
+            document.getElementById('patientChronic').innerText = (data.chronic_conditions && data.chronic_conditions.length) ? data.chronic_conditions.join(', ') : 'None Reported';
+
+            // Populate form fields for editing convenience
+            document.getElementById('fullName').value = data.full_name || '';
+            document.getElementById('dob').value = data.birth_date || '';
+            document.getElementById('gender').value = data.sex || '';
+            document.getElementById('bloodType').value = data.blood_type || '';
+            document.getElementById('allergies').value = (data.allergies || []).join(', ');
+            document.getElementById('chronic').value = (data.chronic_conditions || []).join(', ');
+
+            document.getElementById('surgeries').value = (data.major_surgeries || []).map(s => `${s.surgery_name} (${s.date})`).join('; ');
+            document.getElementById('medications').value = (data.prescriptions || []).map(p => `${p.prescription_name} ${p.prescription_dose}`).join('; ');
+            document.getElementById('immunizations').value = (data.immunization || []).map(i => `${i.immunization_name} (${i.date})`).join('; ');
+            document.getElementById('presenting').value = (data.presenting_complaint || []).map(p => `${p.complaint}`).join('; ');
+
+            document.getElementById('riskFactors').value = (data.risk_factors || []).join(', ');
+            document.getElementById('emergencyNotes').value = (data.advanced_directives || []).join(', ');
+
+            if (data.emergency_contacts && data.emergency_contacts.length > 0) {
+                const e = data.emergency_contacts[0];
+                document.getElementById('nokName').value = e.name || '';
+                document.getElementById('nokRelation').value = e.additional_info || '';
+                document.getElementById('nokPhone').value = e.contact_number || '';
+            }
+        });
+    }
+
     // --- 3. ADMIN LOGS LOGIC ---
     const logTable = document.getElementById('logTable');
     if (logTable) {
@@ -131,3 +186,4 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
