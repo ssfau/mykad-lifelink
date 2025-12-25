@@ -42,6 +42,16 @@
         </form>
     </div>
     <script src="../js/api.js"></script>
+    <script>
+        // Simple client-side guard: redirect to patient login if not authenticated
+        (function(){
+            const token = localStorage.getItem('access_token');
+            const role = localStorage.getItem('role');
+            if (!token || role !== 'patient') {
+                window.location.href = '../loginPages/patientLogin.html';
+            }
+        })();
+    </script>
     <script src="../js/ui.js"></script>
 </body>
 </html>

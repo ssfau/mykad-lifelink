@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | MyKad-LifeLink</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="landing-container" style="min-height: 100vh; overflow-y: auto;">
+        <header>
+            <a href="../index.html" id="back-link">← Back</a>
+            <h1>Admin Portal</h1>
+            <p>Sign in to access the clinic dashboard.</p>
+        </header>
+
+        <form id="loginForm" style="display: flex; flex-direction: column; gap: 15px; text-align: left; max-width: 420px; margin: 0 auto;">
+            <label>Username</label>
+            <input id="username" type="text" placeholder="admin" required style="padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+
+            <label>Password</label>
+            <input id="password" type="password" placeholder="password" required style="padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+
+            <div id="errorMsg" style="color: var(--emergency-red); display: none; font-size: 0.95rem;"></div>
+
+            <button type="submit" class="role-card admin" style="padding: 15px; background: #555; color: white;">SIGN IN</button>
+            <button id="dark-mode-toggle" aria-label="Toggle Dark Mode">🌓</button>
+        </form>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('loginForm');
+            const errorMsg = document.getElementById('errorMsg');
+
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                errorMsg.style.display = 'none';
+
+                const username = document.getElementById('username').value.trim();
+                const password = document.getElementById('password').value.trim();
+
+                if (!username || !password) {
+                    errorMsg.innerText = 'Please enter username and password.';
+                    errorMsg.style.display = 'block';
+                    return;
+                }
+
+                // Basic demo credentials (replace with real backend auth as needed)
+                if (username !== 'admin' || password !== 'admin123') {
+                    errorMsg.innerText = 'Invalid credentials.';
+                    errorMsg.style.display = 'block';
+                    return;
+                }
+
+                // Call backend mock login for clinic_admin role
+                const resp = await ApiService.login('clinic_admin');
+
+                if (resp && resp.access_token) {
+                    // Save token and role
+                    localStorage.setItem('access_token', resp.access_token);
+                    localStorage.setItem('token_type', resp.token_type || 'bearer');
+                    localStorage.setItem('role', resp.role || 'clinic_admin');
+                    // Save combined header string for convenience
+                    localStorage.setItem('authorization', `Bearer ${resp.access_token}`);
+
+                    // Redirect to admin page
+                    window.location.href = '../pages/admin.html';
+                } else {
+                    errorMsg.innerText = resp.message || 'Login failed. Try again.';
+                    errorMsg.style.display = 'block';
+                }
+            });
+        });
+    </script>
+    <script src="../js/ui.js"></script>
+</body>
+</html>
