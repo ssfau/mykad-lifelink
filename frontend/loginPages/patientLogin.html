@@ -154,18 +154,19 @@
                 e.preventDefault();
                 regErrorMsg.style.display = 'none';
 
-                // Collect form data matching PatientRegistrationConfirm schema
+                // Collect form data matching PatientRegistrationConfirm schema exactly
+                // Schema: full_name (str), birth_date (date), nric_number (str), sex (str), 
+                //         blood_type (str), allergies (Optional[List[str]]), 
+                //         chronic_conditions (Optional[List[str]]), risk_factors (Optional[List[str]]),
+                //         emergency_contacts (Optional[List[str]])
                 const registrationData = {
                     full_name: document.getElementById('reg_full_name').value.trim(),
+                    birth_date: document.getElementById('reg_birth_date').value, // YYYY-MM-DD format (will be parsed as date by FastAPI)
                     nric_number: document.getElementById('reg_nric_number').value.trim(),
-                    birth_date: document.getElementById('reg_birth_date').value, // YYYY-MM-DD format
                     sex: document.getElementById('reg_sex').value,
-                    blood_type: document.getElementById('reg_blood_type').value,
-                    // Optional fields - set to null if not provided
-                    allergies: null,
-                    chronic_conditions: null,
-                    risk_factors: null,
-                    emergency_contacts: null
+                    blood_type: document.getElementById('reg_blood_type').value
+                    // Optional fields (allergies, chronic_conditions, risk_factors, emergency_contacts)
+                    // are omitted when not provided - Pydantic will use default None value
                 };
 
                 // Validate required fields
