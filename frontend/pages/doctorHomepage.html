@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Home | MyKad-LifeLink</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'gov-blue': '#003366',
+                        'gov-blue-light': '#E6F2FF',
+                        'medical-white': '#F8FAFC',
+                        'primary-blue': '#0066CC',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'brand': ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .action-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .action-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .emergency-card {
+            border: 2px solid #dc2626;
+        }
+
+        .emergency-card:hover {
+            transform: translateY(-4px);
+            border-color: #b91c1c;
+            box-shadow: 0 25px 50px -12px rgba(220, 38, 38, 0.25);
+            background-color: #fef2f2;
+        }
+
+        .emergency-pulse {
+            animation: pulse-red 2s infinite;
+        }
+
+        @keyframes pulse-red {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .lang-btn.active {
+            background: white;
+            color: #0066CC;
+            font-weight: 600;
+        }
+
+        .lang-btn:not(.active) {
+            background: transparent;
+            color: white;
+        }
+
+        .bottom-nav-item {
+            transition: all 0.2s ease;
+        }
+
+        .bottom-nav-item.active {
+            color: #0066CC;
+            background-color: #E6F2FF;
+            border-radius: 8px;
+        }
+
+        .bottom-nav-item.active i {
+            color: #0066CC;
+        }
+
+        .bottom-nav-item {
+            border-radius: 8px;
+        }
+
+        .bottom-nav-item:hover {
+            background-color: #F8FAFC;
+            transform: translateY(-2px);
+        }
+
+        .bottom-nav-item:not(.active):hover {
+            color: #0066CC;
+        }
+
+        .bottom-nav-item:not(.active):hover i {
+            color: #0066CC;
+        }
+
+        .lang-btn {
+            transition: all 0.2s ease;
+        }
+
+        .lang-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .emergency-overlay {
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body class="bg-medical-white min-h-screen flex flex-col">
+    <!-- Header Section -->
+    <header class="bg-gradient-to-br from-primary-blue via-gov-blue to-gov-blue relative overflow-hidden">
+        <!-- Decorative Background Elements -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-white opacity-5 rounded-full -mr-48 -mt-48"></div>
+        
+        <div class="relative z-10">
+            <!-- Top Row: Language Toggle and KKM Logo -->
+            <div class="max-w-7xl mx-auto px-8 pt-8 pb-4">
+                <div class="flex items-center justify-between">
+                    <!-- Left: Language Toggle -->
+                    <div class="flex items-center gap-2">
+                        <button id="lang-en" class="lang-btn active px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200" data-lang="en">
+                            EN
+                        </button>
+                        <button id="lang-bm" class="lang-btn px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200" data-lang="bm">
+                            BM
+                        </button>
+                    </div>
+
+                    <!-- Right: KKM Logo -->
+                    <div class="flex items-center gap-3">
+                        <img src="../../assets/kkm-logo.png" alt="KKM Logo" class="h-16 w-auto filter brightness-0 invert" onerror="this.style.display='none'">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Welcome Section -->
+            <div class="max-w-5xl mx-auto px-8 pb-12">
+                <div class="text-white">
+                    <h1 class="text-4xl md:text-5xl font-bold">
+                        Welcome to LifeLink,<br>
+                        <span id="doctor-name" class="block mt-2">Dr. Loading...</span>
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Authorization Banner -->
+    <div class="bg-blue-50 border-l-4 border-primary-blue py-3 px-6">
+        <div class="max-w-5xl mx-auto flex items-center gap-3">
+            <i class="fas fa-shield-alt text-primary-blue text-xl"></i>
+            <p class="text-sm text-gray-700">
+                <strong>Authorized Medical Access Only.</strong> Account permissions are strictly granted via the Ministry of Health (KKM) verification process for doctors, paramedics, and emergency nurses.
+            </p>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col items-center justify-center w-full px-8 py-12">
+        <!-- Cards Stack (Vertical) - Centered -->
+        <div class="space-y-6 max-w-[800px] w-full">
+            <!-- Emergency Mode Card -->
+            <div class="action-card emergency-card bg-white rounded-2xl p-8 shadow-lg cursor-pointer" onclick="activateEmergencyMode()">
+                <div class="flex items-start gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-gradient-to-br from-red-600 to-red-700 rounded-2xl flex items-center justify-center shadow-md emergency-pulse">
+                            <i class="fas fa-heartbeat text-white text-2xl"></i>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-2">
+                            <h3 class="text-2xl font-bold text-gray-900">Activate Emergency Mode</h3>
+                            <span class="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full">HIGH PRIORITY</span>
+                        </div>
+                        <p class="text-gray-600 leading-relaxed mb-4">
+                            Instant access to critical patient data via MyKad bypass/emergency scan. Use only in life-threatening situations.
+                        </p>
+                        <div class="flex items-center text-red-600 font-semibold">
+                            <span>Activate Emergency Access</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audit Log Card -->
+            <div class="action-card bg-white rounded-2xl p-8 shadow-lg border border-gray-100 cursor-pointer" onclick="viewAuditLog()">
+                <div class="flex items-start gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-md">
+                            <i class="fas fa-clock text-white text-2xl"></i>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Audit Log</h3>
+                        <p class="text-gray-600 leading-relaxed mb-4">
+                            View a history of all MyKad scans and record updates performed by this account or clinic. Track all access activities.
+                        </p>
+                        <div class="flex items-center text-primary-blue font-semibold">
+                            <span>View Audit History</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex items-center justify-between">
+                <!-- Centered Navigation Items -->
+                <div class="flex items-center justify-center gap-12 flex-1">
+                    <a href="#" class="bottom-nav-item active flex flex-col items-center justify-center px-4 py-4">
+                        <i class="fas fa-home text-xl mb-1"></i>
+                        <span class="text-xs font-semibold">Home</span>
+                    </a>
+                    <a href="#" onclick="activateEmergencyMode(); return false;" class="bottom-nav-item flex flex-col items-center justify-center px-4 py-4 text-gray-600">
+                        <i class="fas fa-qrcode text-xl mb-1"></i>
+                        <span class="text-xs font-semibold">Scan</span>
+                    </a>
+                    <a href="#" onclick="viewAuditLog(); return false;" class="bottom-nav-item flex flex-col items-center justify-center px-4 py-4 text-gray-600">
+                        <i class="fas fa-clipboard-list text-xl mb-1"></i>
+                        <span class="text-xs font-semibold">Audit Logs</span>
+                    </a>
+                    <button onclick="contactKKM()" class="bottom-nav-item flex flex-col items-center justify-center px-4 py-4 text-gray-600">
+                        <i class="fas fa-headset text-xl mb-1"></i>
+                        <span class="text-xs font-semibold">Contact KKM</span>
+                    </button>
+                </div>
+
+                <!-- Team Signature - Far Right -->
+                <div class="flex flex-col items-center gap-2 pl-8 border-l border-gray-200">
+                    <img src="../../assets/Logo.png" alt="Full Stack Alchemist" class="h-12 w-auto" onerror="this.style.display='none'">
+                    <div class="flex flex-col items-center">
+                        <span class="font-brand font-bold text-xs tracking-wider text-gray-900">FULL STACK</span>
+                        <span class="font-brand font-bold text-xs tracking-wider" style="color: #FFD700;">ALCHEMIST</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Padding for bottom nav -->
+    <div class="h-24"></div>
+
+    <!-- Emergency Mode Overlay -->
+    <div id="emergency-overlay" class="hidden fixed inset-0 bg-red-600 bg-opacity-95 z-50 flex items-center justify-center emergency-overlay">
+        <div class="bg-white rounded-2xl p-12 shadow-2xl text-center max-w-md mx-4">
+            <div class="mb-6">
+                <i class="fas fa-shield-alt text-red-600 text-6xl mb-4"></i>
+                <h2 class="text-3xl font-bold text-red-600 mb-4">SECURE EMERGENCY ACCESS GRANTED</h2>
+                <p class="text-gray-700 text-lg mb-6">
+                    You are about to access emergency patient data. This action will be logged and audited.
+                </p>
+            </div>
+            <div class="flex gap-4 justify-center">
+                <button onclick="closeEmergencyOverlay()" class="px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-colors">
+                    Cancel
+                </button>
+                <button onclick="proceedToEmergencyScanner()" class="px-6 py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors">
+                    Proceed to Scanner
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Language Toggle Functionality
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.lang-btn').forEach(b => {
+                    b.classList.remove('active', 'bg-white', 'text-primary-blue');
+                    b.classList.add('bg-transparent', 'text-white');
+                });
+                this.classList.add('active', 'bg-white', 'text-primary-blue');
+                this.classList.remove('bg-transparent', 'text-white');
+                
+                const lang = this.dataset.lang;
+                updateLanguage(lang);
+            });
+        });
+
+        function updateLanguage(lang) {
+            const elements = {
+                welcome: lang === 'bm' ? 'Selamat Datang ke LifeLink' : 'Welcome to LifeLink',
+                emergencyTitle: lang === 'bm' ? 'Aktifkan Mod Kecemasan' : 'Activate Emergency Mode',
+                emergencyDesc: lang === 'bm' 
+                    ? 'Akses segera kepada data pesakit kritikal melalui MyKad bypass/imbasan kecemasan. Gunakan hanya dalam situasi mengancam nyawa.'
+                    : 'Instant access to critical patient data via MyKad bypass/emergency scan. Use only in life-threatening situations.',
+                auditTitle: lang === 'bm' ? 'Log Audit' : 'Audit Log',
+                auditDesc: lang === 'bm'
+                    ? 'Lihat sejarah semua imbasan MyKad dan kemas kini rekod yang dilakukan oleh akaun atau klinik ini. Jejaki semua aktiviti akses.'
+                    : 'View a history of all MyKad scans and record updates performed by this account or clinic. Track all access activities.',
+                emergencyAccess: lang === 'bm' ? 'Aktifkan Akses Kecemasan' : 'Activate Emergency Access',
+                viewAudit: lang === 'bm' ? 'Lihat Sejarah Audit' : 'View Audit History',
+                emergencyGranted: lang === 'bm' ? 'AKSES KECEMASAN SELAMAT DIBERIKAN' : 'SECURE EMERGENCY ACCESS GRANTED',
+                emergencyWarning: lang === 'bm' 
+                    ? 'Anda akan mengakses data pesakit kecemasan. Tindakan ini akan direkodkan dan diaudit.'
+                    : 'You are about to access emergency patient data. This action will be logged and audited.',
+                proceed: lang === 'bm' ? 'Teruskan ke Pengimbas' : 'Proceed to Scanner',
+                cancel: lang === 'bm' ? 'Batal' : 'Cancel'
+            };
+
+            // Update welcome message
+            const welcomeH1 = document.querySelector('header h1');
+            if (welcomeH1) {
+                welcomeH1.innerHTML = elements.welcome + ',<br><span id="doctor-name" class="block mt-2">' + (document.getElementById('doctor-name').textContent || 'Dr. Loading...') + '</span>';
+            }
+
+            // Update card titles and descriptions
+            const cards = document.querySelectorAll('.action-card');
+            if (cards.length >= 2) {
+                // Emergency Card
+                cards[0].querySelector('h3').textContent = elements.emergencyTitle;
+                cards[0].querySelector('p').textContent = elements.emergencyDesc;
+                cards[0].querySelector('.flex.items-center.text-red-600 span').textContent = elements.emergencyAccess;
+                
+                // Audit Card
+                cards[1].querySelector('h3').textContent = elements.auditTitle;
+                cards[1].querySelector('p').textContent = elements.auditDesc;
+                cards[1].querySelector('.flex.items-center.text-primary-blue span').textContent = elements.viewAudit;
+            }
+        }
+
+        // Load Doctor Name
+        function loadDoctorName() {
+            const storedName = localStorage.getItem('doctorName') || 'Dr. Ahmad Bin Ismail';
+            document.getElementById('doctor-name').textContent = storedName;
+        }
+
+        // Emergency Mode Activation
+        function activateEmergencyMode() {
+            document.getElementById('emergency-overlay').classList.remove('hidden');
+        }
+
+        function closeEmergencyOverlay() {
+            document.getElementById('emergency-overlay').classList.add('hidden');
+        }
+
+        function proceedToEmergencyScanner() {
+            // Log emergency access
+            console.log('Emergency mode activated at:', new Date().toISOString());
+            
+            // Close overlay
+            closeEmergencyOverlay();
+            
+            // Redirect to emergency scanner page
+            window.location.href = 'doctor_emergency.html';
+        }
+
+        // Navigation Functions
+        function viewAuditLog() {
+            window.location.href = 'doctor_audit.html';
+        }
+
+        function contactKKM() {
+            alert('KKM Official Enquiries & Emergency Support\n\nPhone: 03-XXXX XXXX\nEmail: support@kkm.gov.my\nOperating Hours: 24/7 for emergencies');
+            // window.location.href = 'pages/support.html';
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDoctorName();
+        });
+    </script>
+</body>
+</html>
+

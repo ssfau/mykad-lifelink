@@ -3,81 +3,366 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paramedic Login | MyKad-LifeLink</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <title>Doctor Registration | MyKad-LifeLink</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'gov-blue': '#003366',
+                        'gov-blue-light': '#E6F2FF',
+                        'medical-white': '#F8FAFC',
+                        'primary-blue': '#0066CC',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'brand': ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .lang-btn.active {
+            background: white;
+            color: #0066CC;
+            font-weight: 600;
+        }
+
+        .lang-btn:not(.active) {
+            background: transparent;
+            color: white;
+        }
+
+        .lang-btn {
+            transition: all 0.2s ease;
+        }
+
+        .lang-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .step-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .input-field {
+            transition: all 0.2s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #0066CC;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+
+        .scan-frame {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 200px;
+            border: 3px solid #0066CC;
+            border-radius: 12px;
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+        }
+
+        .scan-frame::before,
+        .scan-frame::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 4px solid #0066CC;
+        }
+
+        .scan-frame::before {
+            top: -4px;
+            left: -4px;
+            border-right: none;
+            border-bottom: none;
+            border-top-left-radius: 12px;
+        }
+
+        .scan-frame::after {
+            bottom: -4px;
+            right: -4px;
+            border-left: none;
+            border-top: none;
+            border-bottom-right-radius: 12px;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #d1d5db;
+            transition: all 0.3s ease;
+        }
+
+        .step-dot.active {
+            background: #0066CC;
+            width: 32px;
+            border-radius: 6px;
+        }
+    </style>
 </head>
-<body>
-    <div class="landing-container" style="min-height: 100vh; overflow-y: auto;">
-        <header>
-            <a href="../index.html" id="back-link">← Back</a>
-            <h1>Paramedic Portal</h1>
-            <p>Sign in to access the emergency terminal.</p>
+<body class="bg-medical-white min-h-screen flex flex-col">
+    <!-- Header Section -->
+    <header class="bg-gradient-to-br from-primary-blue via-gov-blue to-gov-blue relative overflow-hidden">
+        <!-- Decorative Background Elements -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-white opacity-5 rounded-full -mr-48 -mt-48"></div>
+        
+        <div class="relative z-10">
+            <!-- Top Row: Language Toggle and KKM Logo -->
+            <div class="w-full px-8 pt-8 pb-4">
+                <div class="flex items-center justify-between max-w-5xl mx-auto">
+                    <!-- Left: Language Toggle -->
+                    <div class="flex items-center gap-2">
+                        <button id="lang-en" class="lang-btn active px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200" data-lang="en">
+                            EN
+                        </button>
+                        <button id="lang-bm" class="lang-btn px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200" data-lang="bm">
+                            BM
+                        </button>
+                    </div>
+
+                    <!-- Right: KKM Logo -->
+                    <div class="flex items-center gap-3">
+                        <img src="../assets/kkm-logo.png" alt="KKM Logo" class="h-16 w-auto filter brightness-0 invert" onerror="this.style.display='none'">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Welcome Section -->
+            <div class="max-w-5xl mx-auto px-8 pb-12">
+                <div class="text-white">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-2">
+                        Doctor Registration
+                    </h1>
+                    <p class="text-lg text-white/90">
+                        Complete your professional profile to access LifeLink services
+                    </p>
+                </div>
+            </div>
+        </div>
         </header>
 
-        <form id="loginForm" style="display: flex; flex-direction: column; gap: 15px; text-align: left; max-width: 420px; margin: 0 auto;">
-            <label>Username</label>
-            <input id="username" type="text" placeholder="doctor" required style="padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col items-center justify-center w-full px-8 py-12">
+        <div class="w-full max-w-3xl">
+            <!-- Step Indicator -->
+            <div class="step-indicator">
+                <div class="step-dot active" id="step-1-dot"></div>
+                <div class="step-dot" id="step-2-dot"></div>
+            </div>
 
-            <label>Password</label>
-            <input id="password" type="password" placeholder="password" required style="padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+            <!-- Step 1: Identity Scan -->
+            <div id="step-1" class="step-card bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Identity Verification</h2>
+                
+                <div class="relative bg-gray-900 rounded-xl overflow-hidden mb-6" style="height: 400px;">
+                    <!-- Camera View (Mocked) -->
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="text-center text-white">
+                            <i class="fas fa-camera text-6xl mb-4 opacity-50"></i>
+                            <p class="text-lg">Position your MyKad within the frame</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Scan Frame Overlay -->
+                    <div class="scan-frame"></div>
+                </div>
 
-            <div id="errorMsg" style="color: var(--emergency-red); display: none; font-size: 0.95rem;"></div>
+                <button onclick="simulateScan()" class="w-full bg-primary-blue hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors shadow-md hover:shadow-lg">
+                    <i class="fas fa-qrcode mr-2"></i>
+                    Scan MyKad
+                </button>
+            </div>
 
-            <button type="submit" class="role-card doctor" style="padding: 15px; background: var(--emergency-red); color: white;">SIGN IN</button>
-            <button id="dark-mode-toggle" aria-label="Toggle Dark Mode">☀️</button>
-        </form>
+            <!-- Step 2: Professional Credentials -->
+            <div id="step-2" class="step-card bg-white rounded-2xl p-8 shadow-lg border border-gray-200 hidden">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Professional Credentials</h2>
+                
+                <div class="space-y-4">
+                    <!-- Name (Scanned) -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Full Name <span class="text-xs text-gray-500">(Scanned from MyKad)</span>
+                        </label>
+                        <input type="text" id="name" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" value="Dr. Ahmad Bin Ismail">
+                    </div>
+
+                    <!-- MyKad Number (Scanned) -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            MyKad Number <span class="text-xs text-gray-500">(Scanned from MyKad)</span>
+                        </label>
+                        <input type="text" id="mykad" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" value="800101-10-5678">
+                    </div>
+
+                    <!-- MMC Registration Number -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            MMC Registration Number <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="mmc-number" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" placeholder="Enter your MMC registration number" required>
+                    </div>
+
+                    <!-- Medical Specialization -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Medical Specialization <span class="text-red-500">*</span>
+                        </label>
+                        <select id="specialization" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" required>
+                            <option value="">Select your specialization</option>
+                            <option value="general-practitioner">General Practitioner</option>
+                            <option value="paramedic">Paramedic</option>
+                            <option value="emergency-physician">Emergency Physician</option>
+                            <option value="surgeon">Surgeon</option>
+                            <option value="anesthesiologist">Anesthesiologist</option>
+                            <option value="pediatrician">Pediatrician</option>
+                            <option value="cardiologist">Cardiologist</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <!-- Workplace/Hospital Name -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Workplace/Hospital Name <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="workplace" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" placeholder="Enter your workplace or hospital name" required>
+                    </div>
+
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4">
+                        <p class="text-sm text-blue-800">
+                            <i class="fas fa-shield-alt mr-2"></i>
+                            <strong>Verification Notice:</strong> Your credentials will be verified by the Ministry of Health (KKM) before account activation. This process may take 24-48 hours.
+                        </p>
+                    </div>
+                </div>
+
+                <button onclick="completeRegistration()" class="w-full bg-primary-blue hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors shadow-md hover:shadow-lg mt-6 text-lg">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    Complete Registration
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex items-center justify-between">
+                <!-- Empty center -->
+                <div class="flex items-center justify-center gap-12 flex-1">
+                </div>
+
+                <!-- Team Signature - Far Right -->
+                <div class="flex flex-col items-center gap-2 pl-8 border-l border-gray-200">
+                    <img src="../assets/Logo.png" alt="Full Stack Alchemist" class="h-12 w-auto" onerror="this.style.display='none'">
+                    <div class="flex flex-col items-center">
+                        <span class="font-brand font-bold text-xs tracking-wider text-gray-900">FULL STACK</span>
+                        <span class="font-brand font-bold text-xs tracking-wider" style="color: #FFD700;">ALCHEMIST</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Padding for bottom nav -->
+    <div class="h-24"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-2xl p-8 shadow-2xl text-center max-w-md mx-4">
+            <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-primary-blue mx-auto mb-4"></div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Submitting Registration...</h3>
+            <p class="text-gray-600">Please wait while we process your professional credentials</p>
+        </div>
     </div>
 
-    <script src="../js/api.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const loginForm = document.getElementById('loginForm');
-            const errorMsg = document.getElementById('errorMsg');
+        let currentStep = 1;
 
-            loginForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                errorMsg.style.display = 'none';
-
-                const username = document.getElementById('username').value.trim();
-                const password = document.getElementById('password').value.trim();
-
-                if (!username || !password) {
-                    errorMsg.innerText = 'Please enter username and password.';
-                    errorMsg.style.display = 'block';
-                    return;
-                }
-
-                 if(username === "nabilhazmi" && password === "@Nabil13"){
-                    window.location.href = "../pages/doctor.html";
-                }
-
-                // Basic demo credentials (replace with real backend auth as needed)
-                if (username !== 'doctor' || password !== 'doctor123') {
-                    errorMsg.innerText = 'Invalid credentials.';
-                    errorMsg.style.display = 'block';
-                    return;
-                }
-
-                // Call backend mock login for doctor role
-                // Mock login requires user_id (int) and role (str)
-                const resp = await ApiService.login(1, 'doctor');
-
-                if (resp && resp.access_token) {
-                    // Save token and role
-                    localStorage.setItem('access_token', resp.access_token);
-                    localStorage.setItem('token_type', resp.token_type || 'bearer');
-                    localStorage.setItem('role', resp.role || 'doctor');
-                    localStorage.setItem('authorization', `Bearer ${resp.access_token}`);
-
-                    // Redirect to doctor terminal
-                    window.location.href = '../pages/doctor.html';
-                } else {
-                    errorMsg.innerText = resp.message || 'Login failed. Try again.';
-                    errorMsg.style.display = 'block';
-                }
+        // Language Toggle
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.lang-btn').forEach(b => {
+                    b.classList.remove('active', 'bg-white', 'text-primary-blue');
+                    b.classList.add('bg-transparent', 'text-white');
+                });
+                this.classList.add('active', 'bg-white', 'text-primary-blue');
+                this.classList.remove('bg-transparent', 'text-white');
             });
         });
+
+        // Simulate MyKad Scan
+        function simulateScan() {
+            // Simulate scanning delay
+            setTimeout(() => {
+                nextStep(2);
+            }, 1500);
+        }
+
+        // Step Navigation
+        function nextStep(step) {
+            // Hide current step
+            document.getElementById(`step-${currentStep}`).classList.add('hidden');
+            document.getElementById(`step-${currentStep}-dot`).classList.remove('active');
+
+            // Show next step
+            currentStep = step;
+            document.getElementById(`step-${currentStep}`).classList.remove('hidden');
+            document.getElementById(`step-${currentStep}-dot`).classList.add('active');
+        }
+
+        // Complete Registration
+        function completeRegistration() {
+            // Collect all data
+            const registrationData = {
+                name: document.getElementById('name').value,
+                mykad: document.getElementById('mykad').value,
+                mmcNumber: document.getElementById('mmc-number').value,
+                specialization: document.getElementById('specialization').value,
+                workplace: document.getElementById('workplace').value,
+            };
+
+            // Validate required fields
+            if (!registrationData.name || !registrationData.mykad || !registrationData.mmcNumber || !registrationData.specialization || !registrationData.workplace) {
+                alert('Please fill in all required fields.');
+                    return;
+                }
+
+            // Show loading overlay
+            document.getElementById('loading-overlay').classList.remove('hidden');
+
+            // Simulate API call
+            setTimeout(() => {
+                // Store doctor name for homepage
+                localStorage.setItem('doctorName', registrationData.name);
+                localStorage.setItem('doctorData', JSON.stringify(registrationData));
+
+                // Redirect to doctor homepage
+                window.location.href = '../pages/doctor/doctorHomepage.html';
+            }, 2500);
+        }
     </script>
-    <script src="../js/ui.js"></script>
 </body>
 </html>

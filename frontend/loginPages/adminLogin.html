@@ -3,82 +3,263 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login | MyKad-LifeLink</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <title>Clinic Staff Login | MyKad-LifeLink</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'gov-blue': '#003366',
+                        'gov-blue-light': '#E6F2FF',
+                        'medical-white': '#F8FAFC',
+                        'primary-blue': '#0066CC',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'brand': ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .lang-btn.active {
+            background: white;
+            color: #0066CC;
+            font-weight: 600;
+        }
+
+        .lang-btn:not(.active) {
+            background: transparent;
+            color: white;
+        }
+
+        .lang-btn {
+            transition: all 0.2s ease;
+        }
+
+        .lang-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .input-field {
+            transition: all 0.2s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #0066CC;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+    </style>
 </head>
-<body>
-    <div class="landing-container" style="min-height: 100vh; overflow-y: auto;">
-        <header>
-            <a href="../index.html" id="back-link">← Back</a>
-            <h1>Admin Portal</h1>
-            <p>Sign in to access the clinic dashboard.</p>
-        </header>
+<body class="bg-medical-white min-h-screen flex flex-col">
+    <!-- Header Section -->
+    <header class="bg-gradient-to-br from-primary-blue via-gov-blue to-gov-blue relative overflow-hidden">
+        <!-- Decorative Background Elements -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-white opacity-5 rounded-full -mr-48 -mt-48"></div>
+        
+        <div class="relative z-10">
+            <!-- Top Row: Language Toggle and KKM Logo -->
+            <div class="w-full px-8 pt-8 pb-4">
+                <div class="flex items-center justify-between max-w-5xl mx-auto">
+                    <!-- Left: Language Toggle -->
+                    <div class="flex items-center gap-2">
+                        <button id="lang-en" class="lang-btn active px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200" data-lang="en">
+                            EN
+                        </button>
+                        <button id="lang-bm" class="lang-btn px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200" data-lang="bm">
+                            BM
+                        </button>
+                    </div>
 
-        <form id="loginForm" style="display: flex; flex-direction: column; gap: 15px; text-align: left; max-width: 420px; margin: 0 auto;">
-            <label>Username</label>
-            <input id="username" type="text" placeholder="admin" required style="padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+                    <!-- Right: KKM Logo -->
+                    <div class="flex items-center gap-3">
+                        <img src="../assets/kkm-logo.png" alt="KKM Logo" class="h-16 w-auto filter brightness-0 invert" onerror="this.style.display='none'">
+                    </div>
+                </div>
+            </div>
 
-            <label>Password</label>
-            <input id="password" type="password" placeholder="password" required style="padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
+            <!-- Welcome Section -->
+            <div class="max-w-5xl mx-auto px-8 pb-12">
+                <div class="text-white">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-2">
+                        Clinic Staff Login
+                    </h1>
+                    <p class="text-lg text-white/90">
+                        Access clinic management and patient record services
+                    </p>
+                </div>
+            </div>
+        </div>
+    </header>
 
-            <div id="errorMsg" style="color: var(--emergency-red); display: none; font-size: 0.95rem;"></div>
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col items-center justify-center w-full px-8 py-12">
+        <div class="w-full max-w-md">
+            <!-- Login Form Card -->
+            <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Sign In</h2>
+                
+                <form id="loginForm" class="space-y-6">
+                    <!-- Username Field -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Clinic Username
+                        </label>
+                        <input type="text" id="username" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" placeholder="Enter clinic username" required autocomplete="username">
+                    </div>
 
-            <button type="submit" class="role-card admin" style="padding: 15px; background: #555; color: white;">SIGN IN</button>
-            <button id="dark-mode-toggle" aria-label="Toggle Dark Mode">☀️</button>
-        </form>
+                    <!-- Password Field -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">
+                            Password
+                        </label>
+                        <input type="password" id="password" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" placeholder="Enter password" required autocomplete="current-password">
+                    </div>
+
+                    <!-- Error Message -->
+                    <div id="errorMsg" class="hidden bg-red-50 border border-red-200 rounded-lg p-4">
+                        <p class="text-sm text-red-800" id="errorText"></p>
+                    </div>
+
+                    <!-- Login Button -->
+                    <button type="submit" class="w-full bg-primary-blue hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors shadow-md hover:shadow-lg text-lg">
+                        <i class="fas fa-sign-in-alt mr-2"></i>
+                        Sign In
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex items-center justify-between">
+                <!-- Empty center -->
+                <div class="flex items-center justify-center gap-12 flex-1">
+                </div>
+
+                <!-- Team Signature - Far Right -->
+                <div class="flex flex-col items-center gap-2 pl-8 border-l border-gray-200">
+                    <img src="../assets/Logo.png" alt="Full Stack Alchemist" class="h-12 w-auto" onerror="this.style.display='none'">
+                    <div class="flex flex-col items-center">
+                        <span class="font-brand font-bold text-xs tracking-wider text-gray-900">FULL STACK</span>
+                        <span class="font-brand font-bold text-xs tracking-wider" style="color: #FFD700;">ALCHEMIST</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Padding for bottom nav -->
+    <div class="h-24"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-2xl p-8 shadow-2xl text-center max-w-md mx-4">
+            <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-primary-blue mx-auto mb-4"></div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Signing In...</h3>
+            <p class="text-gray-600">Please wait while we verify your credentials</p>
+        </div>
     </div>
 
-    <script src="../js/api.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const loginForm = document.getElementById('loginForm');
-            const errorMsg = document.getElementById('errorMsg');
-
-            loginForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                errorMsg.style.display = 'none';
-
-                const username = document.getElementById('username').value.trim();
-                const password = document.getElementById('password').value.trim();
-
-                if (!username || !password) {
-                    errorMsg.innerText = 'Please enter username and password.';
-                    errorMsg.style.display = 'block';
-                    return;
-                }
+        // Language Toggle
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.lang-btn').forEach(b => {
+                    b.classList.remove('active', 'bg-white', 'text-primary-blue');
+                    b.classList.add('bg-transparent', 'text-white');
+                });
+                this.classList.add('active', 'bg-white', 'text-primary-blue');
+                this.classList.remove('bg-transparent', 'text-white');
                 
-                if(username === "nabilhazmi" && password === "@Nabil13"){
-                    window.location.href = "../pages/admin.html";
-                }
-
-                // Basic demo credentials (replace with real backend auth as needed)
-                if (username !== 'admin' || password !== 'admin123') {
-                    errorMsg.innerText = 'Invalid credentials.';
-                    errorMsg.style.display = 'block';
-                    return;
-                }
-
-                // Call backend mock login for clinic_admin role
-                // Mock login requires user_id (int) and role (str)
-                const resp = await ApiService.login(1, 'clinic_admin');
-
-                if (resp && resp.access_token) {
-                    // Save token and role
-                    localStorage.setItem('access_token', resp.access_token);
-                    localStorage.setItem('token_type', resp.token_type || 'bearer');
-                    localStorage.setItem('role', resp.role || 'clinic_admin');
-                    // Save combined header string for convenience
-                    localStorage.setItem('authorization', `Bearer ${resp.access_token}`);
-
-                    // Redirect to admin page
-                    window.location.href = '../pages/admin.html';
-                } else {
-                    errorMsg.innerText = resp.message || 'Login failed. Try again.';
-                    errorMsg.style.display = 'block';
-                }
+                const lang = this.dataset.lang;
+                updateLanguage(lang);
             });
         });
+
+        function updateLanguage(lang) {
+            const elements = {
+                title: lang === 'bm' ? 'Log Masuk Kakitangan Klinik' : 'Clinic Staff Login',
+                subtitle: lang === 'bm' ? 'Akses perkhidmatan pengurusan klinik dan rekod pesakit' : 'Access clinic management and patient record services',
+                signIn: lang === 'bm' ? 'Log Masuk' : 'Sign In',
+                usernameLabel: lang === 'bm' ? 'Nama Pengguna Klinik' : 'Clinic Username',
+                usernamePlaceholder: lang === 'bm' ? 'Masukkan nama pengguna klinik' : 'Enter clinic username',
+                passwordLabel: lang === 'bm' ? 'Kata Laluan' : 'Password',
+                passwordPlaceholder: lang === 'bm' ? 'Masukkan kata laluan' : 'Enter password',
+                signingIn: lang === 'bm' ? 'Sedang Log Masuk...' : 'Signing In...',
+                verifying: lang === 'bm' ? 'Sila tunggu semasa kami mengesahkan kelayakan anda' : 'Please wait while we verify your credentials'
+            };
+
+            document.querySelector('header h1').textContent = elements.title;
+            document.querySelector('header p').textContent = elements.subtitle;
+            document.querySelector('h2').textContent = elements.signIn;
+            
+            const usernameLabel = document.querySelector('input#username').previousElementSibling;
+            if (usernameLabel) usernameLabel.textContent = elements.usernameLabel;
+            document.getElementById('username').placeholder = elements.usernamePlaceholder;
+            
+            const passwordLabel = document.querySelector('input#password').previousElementSibling;
+            if (passwordLabel) passwordLabel.textContent = elements.passwordLabel;
+            document.getElementById('password').placeholder = elements.passwordPlaceholder;
+        }
+
+        // Login Form Handler
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const errorMsg = document.getElementById('errorMsg');
+            const errorText = document.getElementById('errorText');
+            const loadingOverlay = document.getElementById('loading-overlay');
+            
+            // Hide error message
+            errorMsg.classList.add('hidden');
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            // Validate inputs
+            if (!username || !password) {
+                errorText.textContent = 'Please enter both username and password.';
+                errorMsg.classList.remove('hidden');
+                return;
+            }
+            
+            // Show loading overlay
+            loadingOverlay.classList.remove('hidden');
+            
+            // Simulate API call (replace with actual backend call)
+            setTimeout(() => {
+                // For demo purposes, accept any credentials
+                // In production, this would be:
+                // const response = await fetch('/api/clinic/login', {
+                //     method: 'POST',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     body: JSON.stringify({ username, password })
+                // });
+                // const data = await response.json();
+                // if (data.success) { ... }
+                
+                // Store clinic username for homepage
+                localStorage.setItem('clinicUsername', username);
+                
+                // Hide loading overlay
+                loadingOverlay.classList.add('hidden');
+                
+                // Redirect to admin homepage
+                window.location.href = '../pages/adminHomepage.html';
+            }, 1500);
+        });
     </script>
-    <script src="../js/ui.js"></script>
 </body>
 </html>

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | MyKad-LifeLink</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'gov-blue': '#003366',
+                        'gov-blue-light': '#E6F2FF',
+                        'medical-white': '#F8FAFC',
+                        'primary-blue': '#0066CC',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'brand': ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .action-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .action-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .lang-btn.active {
+            background: white;
+            color: #0066CC;
+            font-weight: 600;
+        }
+
+        .lang-btn:not(.active) {
+            background: transparent;
+            color: white;
+        }
+
+        .bottom-nav-item {
+            transition: all 0.2s ease;
+        }
+
+        .bottom-nav-item.active {
+            color: #0066CC;
+            background-color: #E6F2FF;
+            border-radius: 8px;
+        }
+
+        .bottom-nav-item.active i {
+            color: #0066CC;
+        }
+
+        .bottom-nav-item {
+            border-radius: 8px;
+        }
+
+        .bottom-nav-item:hover {
+            background-color: #F8FAFC;
+            transform: translateY(-2px);
+        }
+
+        .bottom-nav-item:not(.active):hover {
+            color: #0066CC;
+        }
+
+        .bottom-nav-item:not(.active):hover i {
+            color: #0066CC;
+        }
+
+        .lang-btn {
+            transition: all 0.2s ease;
+        }
+
+        .lang-btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="bg-medical-white min-h-screen flex flex-col">
+    <!-- Header Section -->
+    <header class="bg-gradient-to-br from-primary-blue via-gov-blue to-gov-blue relative overflow-hidden">
+        <!-- Decorative Background Elements -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-white opacity-5 rounded-full -mr-48 -mt-48"></div>
+        
+        <div class="relative z-10">
+            <!-- Top Row: Language Toggle and KKM Logo -->
+            <div class="max-w-7xl mx-auto px-8 pt-8 pb-4">
+                <div class="flex items-center justify-between">
+                    <!-- Left: Language Toggle -->
+                    <div class="flex items-center gap-2">
+                        <button id="lang-en" class="lang-btn active px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200" data-lang="en">
+                            EN
+                        </button>
+                        <button id="lang-bm" class="lang-btn px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200" data-lang="bm">
+                            BM
+                        </button>
+                    </div>
+
+                    <!-- Right: KKM Logo -->
+                    <div class="flex items-center gap-3">
+                        <img src="assets/kkm-logo.png" alt="KKM Logo" class="h-16 w-auto filter brightness-0 invert" onerror="this.style.display='none'">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Welcome Section -->
+            <div class="max-w-5xl mx-auto px-8 pb-12">
+                <div class="text-white">
+                    <h1 class="text-4xl md:text-5xl font-bold">
+                        Welcome to LifeLink,<br>
+                        <span id="user-name" class="block mt-2">Loading...</span>
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-5xl mx-auto px-8 py-12 w-full">
+        <!-- Cards Stack (Vertical) -->
+        <div class="space-y-6">
+                <!-- View Medical Info Card -->
+                <div class="action-card bg-white rounded-2xl p-8 shadow-lg border border-gray-100 cursor-pointer" onclick="viewMedicalInfo()">
+                <div class="flex items-start gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-gradient-to-br from-pink-500 to-rose-500 rounded-2xl flex items-center justify-center shadow-md">
+                            <i class="fas fa-heart text-white text-2xl"></i>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">View Medical Info</h3>
+                        <p class="text-gray-600 leading-relaxed mb-4">
+                            Access your medical data including blood type, allergies, chronic conditions, and emergency contacts
+                        </p>
+                        <div class="flex items-center text-primary-blue font-semibold">
+                            <span>View Details</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View Summary Card -->
+            <div class="action-card bg-white rounded-2xl p-8 shadow-lg border border-gray-100 cursor-pointer" onclick="viewSummary()">
+                <div class="flex items-start gap-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-2xl flex items-center justify-center shadow-md">
+                            <i class="fas fa-clipboard-check text-white text-2xl"></i>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">View Summary</h3>
+                        <p class="text-gray-600 leading-relaxed mb-4">
+                            Quick view of all audited activities. See timestamps of when doctors or clinic admins scanned your MyKad or updated records
+                        </p>
+                        <div class="flex items-center text-primary-blue font-semibold">
+                            <span>View Audit Log</span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact KKM for Emergencies Card -->
+            <div class="action-card bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+                <div class="flex items-start gap-6 mb-6">
+                    <div class="flex-shrink-0">
+                        <div class="w-16 h-16 bg-gradient-to-br from-pink-300 to-rose-300 rounded-2xl flex items-center justify-center shadow-md">
+                            <i class="fas fa-phone text-white text-2xl"></i>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Contact KKM for Emergencies or Enquiries</h3>
+                        <p class="text-gray-600 leading-relaxed mb-2">
+                            For immediate medical emergencies, urgent health inquiries, or official enquiries regarding your MyKad-LifeLink profile.
+                        </p>
+                        <p class="text-sm text-red-600 font-semibold">
+                            <i class="fas fa-exclamation-circle mr-1"></i>
+                            Available 24/7 for emergency situations
+                        </p>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center">
+                    <button onclick="contactSupport()" class="bg-red-600 hover:bg-red-700 text-white font-semibold px-10 py-4 rounded-lg transition-colors shadow-md hover:shadow-lg mb-4 text-lg">
+                        <i class="fas fa-phone-alt mr-2"></i>
+                        Contact KKM Now
+                    </button>
+                    <div class="flex items-center gap-2 text-gray-500 text-sm">
+                        <i class="fas fa-building"></i>
+                        <span>Official KKM (Ministry of Health Malaysia) Service</span>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50">
+        <div class="max-w-7xl mx-auto px-8">
+            <div class="flex items-center justify-between">
+                <!-- Centered Navigation Items -->
+                <div class="flex items-center justify-center gap-12 flex-1">
+                    <a href="#" class="bottom-nav-item active flex flex-col items-center justify-center px-4 py-4">
+                        <i class="fas fa-home text-xl mb-1"></i>
+                        <span class="text-xs font-semibold">Home</span>
+                    </a>
+                    <a href="pages/patient.html" onclick="viewMedicalInfo(); return false;" class="bottom-nav-item flex flex-col items-center justify-center px-4 py-4 text-gray-600">
+                        <i class="fas fa-file-medical text-xl mb-1"></i>
+                        <span class="text-xs font-semibold">Medical Records</span>
+                    </a>
+                    <a href="#" onclick="viewSummary(); return false;" class="bottom-nav-item flex flex-col items-center justify-center px-4 py-4 text-gray-600">
+                        <i class="fas fa-clipboard-list text-xl mb-1"></i>
+                        <span class="text-xs font-semibold">Summary</span>
+                    </a>
+                    <button onclick="contactSupport()" class="bottom-nav-item flex flex-col items-center justify-center px-4 py-4 text-gray-600">
+                        <i class="fas fa-headset text-xl mb-1"></i>
+                        <span class="text-xs font-semibold">Contact KKM</span>
+                    </button>
+                </div>
+
+                <!-- Team Signature - Far Right -->
+                <div class="flex flex-col items-center gap-2 pl-8 border-l border-gray-200">
+                    <img src="assets/Logo.png" alt="Full Stack Alchemist" class="h-12 w-auto" onerror="this.style.display='none'">
+                    <div class="flex flex-col items-center">
+                        <span class="font-brand font-bold text-xs tracking-wider text-gray-900">FULL STACK</span>
+                        <span class="font-brand font-bold text-xs tracking-wider" style="color: #FFD700;">ALCHEMIST</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Padding for bottom nav -->
+    <div class="h-24"></div>
+
+    <script>
+        // Language Toggle Functionality
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.lang-btn').forEach(b => {
+                    b.classList.remove('active', 'bg-white', 'text-primary-blue');
+                    b.classList.add('bg-transparent', 'text-white');
+                });
+                this.classList.add('active', 'bg-white', 'text-primary-blue');
+                this.classList.remove('bg-transparent', 'text-white');
+                
+                const lang = this.dataset.lang;
+                updateLanguage(lang);
+            });
+        });
+
+        function updateLanguage(lang) {
+            const elements = {
+                welcome: lang === 'bm' ? 'Selamat Datang ke LifeLink' : 'Welcome to LifeLink',
+                medicalTitle: lang === 'bm' ? 'Lihat Maklumat Perubatan' : 'View Medical Info',
+                medicalDesc: lang === 'bm' 
+                    ? 'Akses data perubatan anda termasuk jenis darah, alahan, keadaan kronik, dan kontak kecemasan'
+                    : 'Access your medical data including blood type, allergies, chronic conditions, and emergency contacts',
+                summaryTitle: lang === 'bm' ? 'Lihat Ringkasan' : 'View Summary',
+                summaryDesc: lang === 'bm'
+                    ? 'Pandangan ringkas semua aktiviti yang diaudit. Lihat cap masa apabila doktor atau pentadbir klinik mengimbas MyKad anda atau mengemaskini rekod'
+                    : 'Quick view of all audited activities. See timestamps of when doctors or clinic admins scanned your MyKad or updated records',
+                supportTitle: lang === 'bm' ? 'Hubungi KKM untuk Kecemasan atau Pertanyaan' : 'Contact KKM for Emergencies or Enquiries',
+                supportDesc: lang === 'bm'
+                    ? 'Untuk kecemasan perubatan segera, pertanyaan kesihatan mendesak, atau pertanyaan rasmi mengenai profil MyKad-LifeLink anda.'
+                    : 'For immediate medical emergencies, urgent health inquiries, or official enquiries regarding your MyKad-LifeLink profile.',
+                contactBtn: lang === 'bm' ? 'Hubungi KKM Sekarang' : 'Contact KKM Now',
+                emergencyNote: lang === 'bm' ? 'Tersedia 24/7 untuk situasi kecemasan' : 'Available 24/7 for emergency situations',
+                kkmService: lang === 'bm' ? 'Perkhidmatan Rasmi KKM (Kementerian Kesihatan Malaysia)' : 'Official KKM (Ministry of Health Malaysia) Service'
+            };
+
+            // Update welcome message
+            const welcomeH1 = document.querySelector('header h1');
+            if (welcomeH1) {
+                welcomeH1.innerHTML = elements.welcome + ',<br><span id="user-name" class="block mt-2">' + (document.getElementById('user-name').textContent || 'Loading...') + '</span>';
+            }
+
+            // Update card titles and descriptions
+            const cards = document.querySelectorAll('.action-card');
+            if (cards.length >= 2) {
+                // Medical Info Card
+                cards[0].querySelector('h3').textContent = elements.medicalTitle;
+                cards[0].querySelector('p').textContent = elements.medicalDesc;
+                
+                // Summary Card
+                cards[1].querySelector('h3').textContent = elements.summaryTitle;
+                cards[1].querySelector('p').textContent = elements.summaryDesc;
+                
+                // Support Card
+                cards[2].querySelector('h3').textContent = elements.supportTitle;
+                const supportDesc = cards[2].querySelectorAll('p');
+                if (supportDesc.length >= 2) {
+                    supportDesc[0].textContent = elements.supportDesc;
+                    supportDesc[1].innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i>' + elements.emergencyNote;
+                }
+                cards[2].querySelector('button').innerHTML = '<i class="fas fa-phone-alt mr-2"></i>' + elements.contactBtn;
+                cards[2].querySelector('.fa-building').nextSibling.textContent = ' ' + elements.kkmService;
+            }
+        }
+
+        // Load User Name
+        function loadUserName() {
+            const storedName = localStorage.getItem('patientName') || 'Jamil Bin Abu';
+            document.getElementById('user-name').textContent = storedName;
+        }
+
+        // Navigation Functions
+        function viewMedicalInfo() {
+            window.location.href = 'pages/patient.html';
+        }
+
+        function viewSummary() {
+            window.location.href = 'pages/patient_summary.html';
+        }
+
+        function contactSupport() {
+            alert('KKM Technical Support\n\nPhone: 03-XXXX XXXX\nEmail: support@kkm.gov.my\nOperating Hours: Monday - Friday, 8:00 AM - 5:00 PM');
+            // window.location.href = 'pages/support.html';
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserName();
+        });
+    </script>
+</body>
+</html>
+
