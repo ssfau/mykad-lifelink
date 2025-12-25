@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (darkMode === 'enabled') {
         body.classList.add('dark-mode');
-        if (toggleBtn) toggleBtn.textContent = '☀️'; // Change icon to sun
+        if (toggleBtn) toggleBtn.textContent = '🌙'; // Change icon to sun
     }
 
     // 2. Add event listener to the button
@@ -178,10 +178,10 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (body.classList.contains('dark-mode')) {
                 localStorage.setItem('dark-mode', 'enabled');
-                toggleBtn.textContent = '☀️';
+                toggleBtn.textContent = '🌙';
             } else {
                 localStorage.setItem('dark-mode', 'disabled');
-                toggleBtn.textContent = '🌙';
+                toggleBtn.textContent = '☀️';
             }
         });
     }
