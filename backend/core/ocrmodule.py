@@ -4,32 +4,67 @@ from PIL import Image
 import pytesseract
 from fastapi import FastAPI, UploadFile, File, HTTPException
 
+""" HELPER FUNCTIONS """
+
+def looks_like_address(line: str) -> bool:
+    address_keywords = [
+        "JALAN", "LORONG", "TAMAN", "KAMPUNG",
+        "KG", "NO", "BANDAR", "POSKOD", "SELANGOR",
+        "KUALA", "MELAKA", "JOHOR", "PULAU", "SABAH", "SARAWAK"
+    ]
+
+    if any(char.isdigit() for char in line):
+        return True
+
+    return any(word in line for word in address_keywords)
+
+
 # string splitters based off ocr capture
 def extract_nric(text: str):
-    match = re.search(r'\b\d{6}-?\d{2}-?\d{4}\b', text)
-    return match.group(0) if match else None
+    match = re.search(r'\b\d{6}[- ]?\d{2}[- ]?\d{4}\b', text)
+    if not match:
+        return None
+
+    # add dashes
+    raw = re.sub(r'\D', '', match.group())
+    return f"{raw[:6]}-{raw[6:8]}-{raw[8:]}"
+
 
 def extract_name(text: str):
-    lines = text.splitlines()
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    lines_upper = [line.upper() for line in lines]
 
-    for i, line in enumerate(lines):
-        line_upper = line.upper()
+    # Step 1: Find NRIC line index
+    nric_index = None
+    for i, line in enumerate(lines_upper):
+        if re.search(r'\d{6}[- ]?\d{2}[- ]?\d{4}', line):
+            nric_index = i
+            break
 
-        if "NAMA" in line_upper or "NAME" in line_upper:
-            # Try next line first
-            if i + 1 < len(lines):
-                candidate = lines[i + 1].strip()
-                if candidate.isupper() and len(candidate) > 3:
-                    return candidate
+    if nric_index is None:
+        return None
 
-            # Fallback: same line
-            parts = line.split(":")
-            if len(parts) > 1:
-                candidate = parts[-1].strip()
-                if candidate.isupper():
-                    return candidate
+    # Step 2: Name is usually right after NRIC
+    for i in range(nric_index + 1, min(nric_index + 4, len(lines_upper))):
+        candidate = lines_upper[i]
+
+        # Must be uppercase letters + spaces
+        if not re.fullmatch(r"[A-Z @'.\-]+", candidate):
+            continue
+
+        # Must not be address
+        if looks_like_address(candidate):
+            continue
+
+        # Reasonable name length
+        if len(candidate) < 5:
+            continue
+
+        return candidate
 
     return None
+
+""" IMAGE PROCESSING OCR """
 
 # image selection + processing
 def process_image_bytes(image_bytes: bytes):

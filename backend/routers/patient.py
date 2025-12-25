@@ -6,7 +6,7 @@ from datetime import datetime, date, timedelta
 
 # local imports
 from backend.db import get_db
-from backend.main import require_role
+from backend.main import require_auth
 from backend.core.ocrmodule import ocr_mykad_image
 from backend.core import patient_logic
 import backend.schemas as schemas
@@ -22,12 +22,51 @@ async def ocr_mykadscan(file: UploadFile = File(...), db: Session = Depends(get_
     # reminder: save raw ocr text to database
     return await ocr_mykad_image(file)
 
+# final registration function
 @router.post("/patient/mykadscan/confirmation")
-def confirm_mykadscan(nric: str, name: str, db: Session = Depends(get_db)):
-    return "a"
+def confirm_mykadscan(
+    payload: patient_logic.PatientRegistrationConfirm,
+    db: Session = Depends(get_db),
+    session=Depends(require_auth(["patient"]))
+):
+    existing_patient = (
+        db.query(patient_logic.Patient)
+        .filter(patient_logic.Patient.nric_number == payload.nric_number)
+        .first()
+    )
 
-@router.get("/profile", response_model=schemas.PatientDataResponse)
-def get_patient_profile(nric: str, db: Session = Depends(get_db)):
+    if existing_patient:
+        return {
+            "status": "exists",
+            "patient_id": existing_patient.id,
+            "message": "Patient record already exists"
+        }
+
+    new_patient = patient_logic.Patient(
+        full_name=payload.full_name,
+        birth_date=payload.birth_date,
+        nric_number=payload.nric_number,
+        sex=payload.sex,
+        blood_type=payload.blood_type,
+
+        allergies=payload.allergies,
+        chronic_conditions=payload.chronic_conditions,
+        risk_factors=payload.risk_factors
+    )
+
+    db.add(new_patient)
+    db.commit()
+    db.refresh(new_patient)
+
+    return {
+        "status": "created",
+        "patient_id": new_patient.id,
+        "message": "Patient registered successfully"
+    }
+
+
+@router.get("/patient/profile", response_model=schemas.PatientDataResponse)
+def get_patient_profile(nric: str, db: Session = Depends(get_db), session=Depends(require_auth(["patient"]))):
     """Return the full patient profile matching an NRIC number."""
     # Query patient by NRIC
     patient = db.query(patient_logic.Patient).filter(patient_logic.Patient.nric_number == nric).first()

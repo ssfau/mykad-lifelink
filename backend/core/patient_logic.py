@@ -101,3 +101,17 @@ class Patient(Base):
     immunization: Mapped[List["Immunization"]] = relationship("Immunization", back_populates="patient")
     presenting_complaint: Mapped[List["PresentingComplaint"]] = relationship("PresentingComplaint", back_populates="patient")
     emergency_contacts: Mapped[List["EmergencyContact"]] = relationship("EmergencyContact", back_populates="patient")
+
+# non critical data sending
+
+class PatientRegistrationConfirm(BaseModel):
+    full_name: str
+    birth_date: date
+    nric_number: str
+    sex: str
+
+    blood_type: str
+    allergies: Optional[List[str]] = None
+    chronic_conditions: Optional[List[str]] = None
+    risk_factors: Optional[List[str]] = None
+    emergency_contacts: Optional[List[str]] = None

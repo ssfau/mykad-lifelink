@@ -33,13 +33,18 @@ def homepage_quickreturn():
 # meant for import
 
 SESSIONS = {}
+SESSION_TTL = timedelta(hours=1)
 
-def create_session(role: str):
+def create_session(user_id: int, role: str):
     token = secrets.token_urlsafe(32)
+
     SESSIONS[token] = {
+        "user_id": user_id,
         "role": role,
-        "expires": datetime.utcnow() + timedelta(hours=1)
+        "issued_at": datetime.utcnow(),
+        "expires": datetime.utcnow() + SESSION_TTL
     }
+
     return token
 
 def get_session(authorization: str = Header(...)):
@@ -54,14 +59,20 @@ def get_session(authorization: str = Header(...)):
 
     return session
 
-def require_role(required_role: str):
+def require_auth(allowed_roles: list[str]):
     def checker(session=Depends(get_session)):
-        if session["role"] != required_role:
-            raise HTTPException(status_code=403)
-        return session
+        if not session:
+            raise HTTPException(status_code=401, detail="Not authenticated")
+
+        if session["role"] not in allowed_roles:
+            raise HTTPException(status_code=403, detail="Insufficient permissions")
+
+        return session  # contains user_id, role
     return checker
 
+
 class MockLoginRequest(BaseModel):
+    user_id: int
     role: str
 
 @app.post("/auth/login")
@@ -69,7 +80,7 @@ def mock_login(data: MockLoginRequest):
     if data.role not in ["patient", "doctor", "clinic_admin"]:
         raise HTTPException(status_code=400, detail="Invalid role")
 
-    token = create_session(data.role)
+    token = create_session(data.user_id, data.role)
 
     return {
         "access_token": token,

@@ -17,9 +17,6 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
-# Workout Models
-class PatientDataTemplate(Base):
-    __tablename__ = "patient_data_template"
 
 def get_db():
     db = SessionLocal()

@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 from datetime import date
+from typing import List, Optional
 
 #################################
 ###                           ###
@@ -64,3 +65,4 @@ class PatientDataCreate(PatientDataBase):
 
 class PatientDataResponse(PatientDataBase):
     user_id: str = Field(..., examples=["abc123xyz"])
+
