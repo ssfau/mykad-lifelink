@@ -1,26 +1,35 @@
 import re
 import os
+import sys
 from io import BytesIO
 from PIL import Image
 import pytesseract
 from fastapi import FastAPI, UploadFile, File, HTTPException
 
-# Auto-detect Tesseract installation on Windows if not in PATH
+# Auto-detect Tesseract installation on Windows/Linux
 def configure_tesseract():
     """Automatically configure Tesseract path if not in system PATH"""
-    # Common Windows installation paths
-    common_paths = [
-        r"C:\Program Files\Tesseract-OCR\tesseract.exe",
-        r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe",
-        r"C:\Tesseract-OCR\tesseract.exe",
-    ]
-    
-    # Check if tesseract is already accessible
+    # Check if tesseract is already accessible (e.g., in PATH on Linux)
     try:
         pytesseract.get_tesseract_version()
         return  # Already working
     except Exception:
         pass  # Not found, try common paths
+    
+    # Platform-specific paths
+    if sys.platform.startswith('win'):
+        # Windows installation paths
+        common_paths = [
+            r"C:\Program Files\Tesseract-OCR\tesseract.exe",
+            r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe",
+            r"C:\Tesseract-OCR\tesseract.exe",
+        ]
+    else:
+        # Linux/Unix paths (Railway uses Linux)
+        common_paths = [
+            "/usr/bin/tesseract",
+            "/usr/local/bin/tesseract",
+        ]
     
     # Try common installation paths
     for path in common_paths:
@@ -33,16 +42,18 @@ def configure_tesseract():
                 continue  # Try next path
     
     # If we get here, Tesseract is not found
+    # On Linux (Railway), it should be in PATH after apt-get install
 
 # Configure Tesseract on module import
 configure_tesseract()
 
-# Manual configuration: If auto-detection fails, set your Tesseract path here:
-# Since Tesseract is installed but not in PATH, set it directly
+# Manual configuration fallback (mainly for Windows)
 if not hasattr(pytesseract.pytesseract, 'tesseract_cmd') or not pytesseract.pytesseract.tesseract_cmd:
-    default_path = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-    if os.path.exists(default_path):
-        pytesseract.pytesseract.tesseract_cmd = default_path
+    if sys.platform.startswith('win'):
+        default_path = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+        if os.path.exists(default_path):
+            pytesseract.pytesseract.tesseract_cmd = default_path
+    # On Linux, tesseract should be in PATH, so we don't set it explicitly
 
 """ HELPER FUNCTIONS """
 

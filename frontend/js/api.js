@@ -3,9 +3,18 @@
  * All endpoints match the exact routes defined in backend routers
  */
 
-// Base URL - FastAPI runs on port 8000 by default
-// Note: root_path="/api" in main.py is for reverse proxy, local dev uses base path
-const API_BASE_URL = "http://127.0.0.1:8000";
+// Base URL - Auto-detect environment
+// In production (Railway), use relative URLs (same domain)
+// In local dev, use localhost:8000
+const API_BASE_URL = (() => {
+    // Check if we're running in production (served from same domain)
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+        // Production: use relative URLs (same domain, no port)
+        return window.location.origin;
+    }
+    // Local development: use localhost:8000
+    return "http://127.0.0.1:8000";
+})();
 
 /**
  * Helper function to get auth headers with Bearer token

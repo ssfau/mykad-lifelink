@@ -1,0 +1,10 @@
+# Requirements for Vercel deployment
+# This file is needed by Vercel's Python runtime
+fastapi
+uvicorn[standard]
+sqlalchemy
+pytesseract
+Pillow
+python-multipart
+pydantic
+
