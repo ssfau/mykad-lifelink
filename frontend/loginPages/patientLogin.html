@@ -7,6 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="../assets/Logo.png">
+
     <script>
         tailwind.config = {
             theme: {
@@ -359,14 +361,14 @@
 
             <!-- Step 1: MyKad Scan -->
             <div id="step-1" class="step-card bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Identity Verification</h2>
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center"><span data-i18n="step1.title">Identity Verification</span></h2>
                 
                 <div class="relative bg-gray-900 rounded-xl overflow-hidden mb-6" style="height: 400px;">
                     <!-- Camera View (Mocked) -->
                     <div class="absolute inset-0 flex items-center justify-center">
                         <div class="text-center text-white">
                             <i class="fas fa-camera text-6xl mb-4 opacity-50"></i>
-                            <p class="text-lg">Upload your MyKad image</p>
+                            <p class="text-lg"><span data-i18n="upload_hint">Upload your MyKad image</span></p>
                         </div>
                     </div>
                     
@@ -377,89 +379,85 @@
                 <input type="file" id="mykad-file-input" accept="image/*" style="display: none;">
                 <button id="upload-mykad-btn" onclick="document.getElementById('mykad-file-input').click()" class="w-full bg-primary-blue hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors shadow-md hover:shadow-lg">
                     <i class="fas fa-upload mr-2"></i>
-                    Upload MyKad Image
+                    <span data-i18n="upload_btn">Upload MyKad Image</span>
                 </button>
                 <p id="step-1-error" class="text-red-600 dark:text-red-400 text-sm mt-2 text-center hidden"></p>
             </div>
 
             <!-- Step 2: Confirm & Edit Details -->
             <div id="step-2" class="step-card bg-white rounded-2xl p-8 shadow-lg border border-gray-200 hidden">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Confirm & Edit Details</h2>
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center"><span data-i18n="step2.title">Confirm & Edit Details</span></h2>
                 
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            Full Name <span class="text-xs text-gray-500">(Scanned from MyKad)</span>
+                            <span data-i18n="label.fullname">Full Name</span> <span class="text-xs text-gray-500" data-i18n="label.scanned">(Scanned from MyKad)</span>
                         </label>
                         <input type="text" id="name" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" required>
                     </div>
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            MyKad Number <span class="text-xs text-gray-500">(Scanned from MyKad)</span>
+                            <span data-i18n="label.mykad">MyKad Number</span> <span class="text-xs text-gray-500" data-i18n="label.scanned">(Scanned from MyKad)</span>
                         </label>
                         <input type="text" id="mykad" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" required>
                     </div>
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            Date of Birth <span class="text-xs text-gray-500">(Scanned from MyKad)</span>
+                            <span data-i18n="label.dob">Date of Birth</span> <span class="text-xs text-gray-500" data-i18n="label.scanned">(Scanned from MyKad)</span>
                         </label>
                         <input type="date" id="dob" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" required>
                     </div>
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            Sex <span class="text-red-500">*</span>
+                            <span data-i18n="label.sex">Sex</span> <span class="text-red-500">*</span>
                         </label>
                         <select id="sex" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" required>
-                            <option value="">Select Sex</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
+                            <option value="" data-i18n="select.sex">Select Sex</option>
+                            <option value="male" data-i18n="option.male">Male</option>
+                            <option value="female" data-i18n="option.female">Female</option>
                         </select>
                     </div>
 
                     <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-4">
                         <p class="text-sm text-yellow-800">
                             <i class="fas fa-info-circle mr-2"></i>
-                            <strong>Note:</strong> Original scanned data is stored as read-only metadata to prevent identity abuse.
+                            <strong data-i18n="note.prefix">Note:</strong> <span data-i18n="note.content">Original scanned data is stored as read-only metadata to prevent identity abuse.</span>
                         </p>
                     </div>
                 </div>
 
                 <button onclick="nextStep(3)" class="w-full bg-primary-blue hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors shadow-md hover:shadow-lg mt-6">
-                    Continue to Medical Information
+                    <span data-i18n="continue_btn">Continue to Medical Information</span>
                     <i class="fas fa-arrow-right ml-2"></i>
                 </button>
             </div>
 
             <!-- Step 3: Medical Self-Declaration -->
             <div id="step-3" class="step-card bg-white rounded-2xl p-8 shadow-lg border border-gray-200 hidden">
-                <h2 class="text-2xl font-bold text-gray-900 mb-2 text-center">Personal Health Records</h2>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2 text-center"><span data-i18n="step3.title">Personal Health Records</span></h2>
                 <p class="text-center text-gray-500 text-sm mb-6">
                     <i class="fas fa-exclamation-triangle mr-1"></i>
-                    Self-Declared Information (Not verified by medical professionals)
+                    <span data-i18n="step3.subtitle">Self-Declared Information (Not verified by medical professionals)</span>
                 </p>
                 
                 <div class="space-y-6">
                     <!-- Allergies -->
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            Allergies
-                        </label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2" data-i18n="label.allergies">Allergies</label>
                         <div class="tag-input" id="allergies-container">
-                            <input type="text" id="allergies-input" class="flex-1 min-w-32 border-none outline-none" placeholder="Type and press Enter to add allergy">
+                            <input type="text" id="allergies-input" class="flex-1 min-w-32 border-none outline-none" placeholder="Type and press Enter to add allergy" data-i18n-placeholder="placeholder.allergy">
                         </div>
                         <div id="allergies-tags" class="mt-2 flex flex-wrap gap-2"></div>
                     </div>
 
                     <!-- Chronic Conditions -->
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            Chronic Conditions
-                        </label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2" data-i18n="label.conditions">Chronic Conditions</label>
                         <div class="tag-input" id="conditions-container">
-                            <input type="text" id="conditions-input" class="flex-1 min-w-32 border-none outline-none" placeholder="Type and press Enter to add condition">
+                            <input type="text" id="conditions-input" class="flex-1 min-w-32 border-none outline-none" placeholder="Type and press Enter to add condition" data-i18n-placeholder="placeholder.condition">
                         </div>
                         <div id="conditions-tags" class="mt-2 flex flex-wrap gap-2"></div>
                     </div>
@@ -467,10 +465,10 @@
                     <!-- Blood Type -->
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            Blood Type <span class="text-red-500">*</span>
+                            <span data-i18n="label.blood">Blood Type</span> <span class="text-red-500">*</span>
                         </label>
                         <select id="blood-type" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" required>
-                            <option value="">Select Blood Type</option>
+                            <option value="" data-i18n="select.blood">Select Blood Type</option>
                             <option value="A+">A+</option>
                             <option value="A-">A-</option>
                             <option value="B+">B+</option>
@@ -484,34 +482,30 @@
 
                     <!-- Risk Factors -->
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            Risk Factors (Optional)
-                        </label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2" data-i18n="label.risk">Risk Factors (Optional)</label>
                         <div class="tag-input" id="risk-factors-container">
-                            <input type="text" id="risk-factors-input" class="flex-1 min-w-32 border-none outline-none bg-transparent" placeholder="Type and press Enter to add risk factor">
+                            <input type="text" id="risk-factors-input" class="flex-1 min-w-32 border-none outline-none bg-transparent" placeholder="Type and press Enter to add risk factor" data-i18n-placeholder="placeholder.risk">
                         </div>
                         <div id="risk-factors-tags" class="mt-2 flex flex-wrap gap-2"></div>
                     </div>
 
                     <!-- Additional Notes -->
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            Additional Medical Notes (Optional)
-                        </label>
-                        <textarea id="notes" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" rows="3" placeholder="Any additional information you'd like to share"></textarea>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2" data-i18n="label.notes">Additional Medical Notes (Optional)</label>
+                        <textarea id="notes" class="input-field w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none" rows="3" placeholder="Any additional information you'd like to share" data-i18n-placeholder="placeholder.notes"></textarea>
                     </div>
 
                     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
                         <p class="text-sm text-blue-800">
                             <i class="fas fa-shield-alt mr-2"></i>
-                            <strong>Privacy Notice:</strong> This information will be accessible to medical professionals during emergencies when your MyKad is scanned.
+                            <strong data-i18n="privacy.prefix">Privacy Notice:</strong> <span data-i18n="privacy.content">This information will be accessible to medical professionals during emergencies when your MyKad is scanned.</span>
                         </p>
                     </div>
                 </div>
 
                 <button onclick="completeRegistration()" class="w-full bg-primary-blue hover:bg-blue-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors shadow-md hover:shadow-lg mt-6 text-lg">
                     <i class="fas fa-check-circle mr-2"></i>
-                    Complete Registration
+                    <span data-i18n="complete_btn">Complete Registration</span>
                 </button>
             </div>
         </div>
@@ -622,6 +616,11 @@
                     btn.classList.add('bg-transparent', 'text-white');
                 }
             });
+
+            // Also apply translations for the saved language (in case loadSavedLanguage is used elsewhere)
+            if (typeof applyTranslations === 'function') {
+                applyTranslations(savedLang);
+            }
         }
 
         // Load language immediately when script runs
@@ -638,6 +637,119 @@
             }
         });
 
+        // Simple translation map
+        const TRANSLATIONS = {
+            en: {
+                title: 'Patient Registration',
+                subtitle: 'Complete your profile to access LifeLink services',
+                'step1.title': 'Identity Verification',
+                upload_hint: 'Upload your MyKad image',
+                upload_btn: 'Upload MyKad Image',
+                'step2.title': 'Confirm & Edit Details',
+                'label.fullname': 'Full Name',
+                'label.mykad': 'MyKad Number',
+                'label.dob': 'Date of Birth',
+                'label.sex': 'Sex',
+                'select.sex': 'Select Sex',
+                'option.male': 'Male',
+                'option.female': 'Female',
+                'note.prefix': 'Note:',
+                'note.content': 'Original scanned data is stored as read-only metadata to prevent identity abuse.',
+                continue_btn: 'Continue to Medical Information',
+                'step3.title': 'Personal Health Records',
+                'step3.subtitle': 'Self-Declared Information (Not verified by medical professionals)',
+                'label.allergies': 'Allergies',
+                'label.conditions': 'Chronic Conditions',
+                'label.blood': 'Blood Type',
+                'select.blood': 'Select Blood Type',
+                'label.risk': 'Risk Factors (Optional)',
+                'label.notes': 'Additional Medical Notes (Optional)',
+                'placeholder.allergy': "Type and press Enter to add allergy",
+                'placeholder.condition': "Type and press Enter to add condition",
+                'placeholder.risk': "Type and press Enter to add risk factor",
+                'placeholder.notes': "Any additional information you'd like to share",
+                'privacy.prefix': 'Privacy Notice:',
+                'privacy.content': "This information will be accessible to medical professionals during emergencies when your MyKad is scanned.",
+                'complete_btn': 'Complete Registration'
+            },
+            bm: {
+                title: 'Pendaftaran Pesakit',
+                subtitle: 'Lengkapkan profil anda untuk mengakses perkhidmatan LifeLink',
+                'step1.title': 'Pengesahan Identiti',
+                upload_hint: 'Muat naik imej MyKad anda',
+                upload_btn: 'Muat Naik Imej MyKad',
+                'step2.title': 'Sahkan & Sunting Maklumat',
+                'label.fullname': 'Nama Penuh',
+                'label.mykad': 'Nombor MyKad',
+                'label.dob': 'Tarikh Lahir',
+                'label.sex': 'Jantina',
+                'select.sex': 'Pilih Jantina',
+                'option.male': 'Lelaki',
+                'option.female': 'Perempuan',
+                'note.prefix': 'Nota:',
+                'note.content': 'Data yang diimbas asal disimpan sebagai metadata baca-sahaja untuk mengelakkan penyalahgunaan identiti.',
+                continue_btn: 'Terus ke Maklumat Perubatan',
+                'step3.title': 'Rekod Kesihatan Peribadi',
+                'step3.subtitle': 'Maklumat yang Diisytiharkan Sendiri (Tidak disahkan oleh profesional perubatan)',
+                'label.allergies': 'Alergi',
+                'label.conditions': 'Keadaan Kronik',
+                'label.blood': 'Kumpulan Darah',
+                'select.blood': 'Pilih Kumpulan Darah',
+                'label.risk': 'Faktor Risiko (Pilihan)',
+                'label.notes': 'Catatan Perubatan Tambahan (Pilihan)',
+                'placeholder.allergy': 'Taip dan tekan Enter untuk menambah alergi',
+                'placeholder.condition': 'Taip dan tekan Enter untuk menambah keadaan',
+                'placeholder.risk': 'Taip dan tekan Enter untuk menambah faktor risiko',
+                'placeholder.notes': 'Sebarang maklumat tambahan yang ingin anda kongsi',
+                'privacy.prefix': 'Notis Privasi:',
+                'privacy.content': 'Maklumat ini akan diakses oleh profesional perubatan semasa kecemasan apabila MyKad anda diimbas.',
+                'complete_btn': 'Lengkapkan Pendaftaran'
+            }
+        };
+
+        function getTranslation(lang, key) {
+            const root = TRANSLATIONS[lang] || {};
+            // Direct lookup for flat keys (e.g. 'step1.title')
+            if (Object.prototype.hasOwnProperty.call(root, key)) {
+                return root[key];
+            }
+
+            // Fallback to nested lookup (if translations are nested objects)
+            const parts = key.split('.');
+            let cur = root;
+            for (let p of parts) {
+                if (cur && typeof cur === 'object' && Object.prototype.hasOwnProperty.call(cur, p)) {
+                    cur = cur[p];
+                } else {
+                    return null;
+                }
+            }
+            return typeof cur === 'string' ? cur : null;
+        }
+
+        function applyTranslations(lang) {
+            // text nodes
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                const t = getTranslation(lang, key);
+                if (t !== null) el.textContent = t;
+            });
+
+            // placeholders
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                const t = getTranslation(lang, key);
+                if (t !== null) el.placeholder = t;
+            });
+
+            // select options
+            document.querySelectorAll('option[data-i18n]').forEach(opt => {
+                const key = opt.getAttribute('data-i18n');
+                const t = getTranslation(lang, key);
+                if (t !== null) opt.textContent = t;
+            });
+        }
+
         // Language Toggle
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.lang-btn').forEach(btn => {
@@ -652,6 +764,9 @@
                     // Save language preference
                     const selectedLang = this.dataset.lang;
                     localStorage.setItem('language', selectedLang);
+
+                    // Apply translations immediately
+                    applyTranslations(selectedLang);
                     
                     // Dispatch storage event manually for same-tab sync
                     window.dispatchEvent(new StorageEvent('storage', {
@@ -660,6 +775,10 @@
                     }));
                 });
             });
+
+            // Apply initial language on DOM ready
+            const initLang = localStorage.getItem('language') || 'en';
+            applyTranslations(initLang);
         });
 
         // MyKad File Upload Handler
