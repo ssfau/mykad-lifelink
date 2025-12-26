@@ -1,0 +1,80 @@
+================================================================================
+  SIMPLE GUIDE: How to Install Tesseract OCR for MyKad LifeLink
+================================================================================
+
+STEP 1: DOWNLOAD
+----------------
+1. Open your web browser
+2. Go to this website:
+   https://github.com/UB-Mannheim/tesseract/wiki
+   
+3. Scroll down and find a file that looks like:
+   "tesseract-ocr-w64-setup-5.4.0.20241005.exe" or similar
+   
+4. Click on it to download
+5. Wait for download to finish (check your Downloads folder)
+
+
+STEP 2: INSTALL
+---------------
+1. Open your Downloads folder
+2. Find the file you just downloaded (ends with .exe)
+3. Double-click it to run
+4. Click "Next" a few times
+5. WHEN YOU SEE "Select Additional Tasks" SCREEN:
+   ✅ CHECK THE BOX: "Add Tesseract to PATH"
+   (This is VERY IMPORTANT!)
+6. Click "Install"
+7. Wait for it to finish
+8. Click "Finish"
+
+
+STEP 3: VERIFY
+--------------
+1. Close ALL terminal/command prompt windows
+2. Open a NEW PowerShell or Command Prompt
+3. Type this and press Enter:
+   tesseract --version
+   
+4. If you see a version number (like 5.4.0) → ✅ SUCCESS!
+5. If you see an error → Go to STEP 4
+
+
+STEP 4: IF IT DOESN'T WORK
+---------------------------
+If "tesseract --version" doesn't work, we can set the path manually:
+
+1. Open this file in your code editor:
+   backend/core/ocrmodule.py
+
+2. Find line 41 (around there) that says:
+   # pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+
+3. Remove the # at the beginning to make it:
+   pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+
+4. If Tesseract is installed somewhere else, change the path to where it is
+
+5. Save the file
+
+6. Restart your server
+
+
+STEP 5: RESTART SERVER
+----------------------
+1. Stop your current server (press Ctrl+C)
+2. Close the terminal
+3. Open a NEW terminal
+4. Go to your project folder
+5. Run: python start_server.py
+6. Try uploading MyKad image again
+
+
+NEED THE DOWNLOAD LINK?
+------------------------
+Visit: https://github.com/UB-Mannheim/tesseract/wiki
+
+Look for Windows installer (.exe file) and download it.
+
+================================================================================
+

@@ -9,13 +9,14 @@ from backend.routers.clinicadmin import router as clinicadmin_router
 
 app = FastAPI()  # root_path="/api" removed for local development (use only with reverse proxy)
 
-# Configure CORS to allow frontend requests
+# Configure CORS to allow frontend requests (including file:// protocol with null origin)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins for local development
+    allow_origins=["*"],  # Allow all origins for local development (including null)
     allow_credentials=False,  # Must be False when using allow_origins=["*"]
     allow_methods=["*"],  # Allows all methods (GET, POST, PUT, DELETE, etc.)
     allow_headers=["*"],  # Allows all headers including Authorization
+    expose_headers=["*"],  # Expose all headers to the frontend
 )
 
 Base.metadata.create_all(bind=engine)

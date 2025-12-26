@@ -34,7 +34,8 @@
 - You should see: `INFO:     Uvicorn running on http://127.0.0.1:8000`
 
 ## ❌ If You See Errors:
-- **Import errors**: Install missing packages with `pip install fastapi uvicorn sqlalchemy pytesseract Pillow python-multipart`
+- **Import errors**: Install missing packages with `pip install -r backend/requirements.txt`
+- **Tesseract OCR errors**: Tesseract OCR is required! See `INSTALL_TESSERACT.md` for installation instructions
 - **Port already in use**: Another server might be running on port 8000
 - **Python not found**: Make sure Python is installed and in your PATH
 

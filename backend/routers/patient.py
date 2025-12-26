@@ -17,13 +17,20 @@ router = APIRouter()
 # no token check required
 
 # this is only to save raw ocr text and make sure data read is strictly backend, name and ic confirmation incase of type will be updated later
-@router.post("/patient/mykadscan/initial")
+@router.post("/mykadscan/initial")
 async def ocr_mykadscan(file: UploadFile = File(...), db: Session = Depends(get_db)):
     # reminder: save raw ocr text to database
-    return await ocr_mykad_image(file)
+    try:
+        return await ocr_mykad_image(file)
+    except HTTPException:
+        # Re-raise HTTP exceptions
+        raise
+    except Exception as e:
+        # Catch any unexpected errors and return proper error response
+        raise HTTPException(status_code=500, detail=f"Error processing MyKad scan: {str(e)}")
 
 # final registration function
-@router.post("/patient/mykadscan/confirmation")
+@router.post("/mykadscan/confirmation")
 def confirm_mykadscan(
     payload: patient_logic.PatientRegistrationConfirm,
     db: Session = Depends(get_db),
@@ -65,7 +72,7 @@ def confirm_mykadscan(
     }
 
 # view own data
-@router.get("/patient/profile", response_model=schemas.PatientDataResponse)
+@router.get("/profile", response_model=schemas.PatientDataResponse)
 def get_patient_profile(nric: str, db: Session = Depends(get_db), session=Depends(require_auth(["patient"]))):
     patient = db.query(patient_logic.Patient).filter(patient_logic.Patient.nric_number == nric).first()
     if not patient:
