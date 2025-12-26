@@ -103,6 +103,26 @@
         #dark-mode-toggle:active {
             transform: scale(0.9);
         }
+
+        .lang-btn.active {
+            background: #0066CC;
+            color: white;
+            font-weight: 600;
+        }
+
+        .lang-btn:not(.active) {
+            background: rgba(255, 255, 255, 0.2);
+            color: #003366;
+        }
+
+        .lang-btn {
+            transition: all 0.2s ease;
+            border: 2px solid rgba(0, 51, 102, 0.3);
+        }
+
+        .lang-btn:hover {
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center bg-white">
@@ -110,6 +130,16 @@
     <button id="dark-mode-toggle" class="fixed top-6 right-6 text-2xl text-gray-600 hover:text-gray-900 transition-colors z-50" aria-label="Toggle Dark Mode">
         ☀️
     </button>
+
+    <!-- Language Toggle -->
+    <div class="fixed top-6 left-6 flex items-center gap-2 z-50">
+        <button id="lang-en" class="lang-btn active px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200" data-lang="en">
+            EN
+        </button>
+        <button id="lang-bm" class="lang-btn px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200" data-lang="bm">
+            BM
+        </button>
+    </div>
 
     <div class="w-full max-w-6xl px-4 py-12 flex flex-col items-center justify-center">
         <!-- Header Section -->
@@ -229,6 +259,105 @@
                 });
             }
         });
+
+        // Language Toggle - Load saved preference on page load
+        function loadSavedLanguage() {
+            const savedLang = localStorage.getItem('language') || 'en';
+            const langBtns = document.querySelectorAll('.lang-btn');
+            langBtns.forEach(btn => {
+                if (btn.dataset.lang === savedLang) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            // Apply language translations if function exists
+            if (typeof updateLanguage === 'function') {
+                updateLanguage(savedLang);
+            }
+        }
+
+        // Load language immediately when script runs
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadSavedLanguage);
+        } else {
+            loadSavedLanguage();
+        }
+
+        // Listen for storage events to sync language changes across windows/tabs
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'language') {
+                loadSavedLanguage();
+            }
+        });
+
+        // Language Toggle Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.lang-btn').forEach(b => {
+                        b.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    const lang = this.dataset.lang;
+                    localStorage.setItem('language', lang);
+                    
+                    // Apply language translations if function exists
+                    if (typeof updateLanguage === 'function') {
+                        updateLanguage(lang);
+                    }
+                    
+                    // Dispatch storage event manually for same-tab sync
+                    window.dispatchEvent(new StorageEvent('storage', {
+                        key: 'language',
+                        newValue: lang
+                    }));
+                });
+            });
+        });
+
+        function updateLanguage(lang) {
+            const elements = {
+                welcome: lang === 'bm' ? 'Selamat Datang ke MyKad-LifeLink' : 'Welcome to MyKad-LifeLink',
+                subtitle: lang === 'bm' ? 'Mengakses data penyelamat nyawa melalui Kad Pengenalan Malaysia anda.' : 'Accessing life-saving data through your Malaysian Identity Card.',
+                patient: lang === 'bm' ? 'Pesakit' : 'Patient',
+                patientDesc: lang === 'bm' ? 'Daftar MyKad anda dan urus kebenaran perubatan anda.' : 'Register your MyKad and manage your medical consent.',
+                doctor: lang === 'bm' ? 'Pakar Perubatan' : 'Medical Professional',
+                doctorDesc: lang === 'bm' ? 'Akses kecemasan kepada jenis darah pesakit dan alahan.' : 'Emergency access to patient blood type and allergies.',
+                clinic: lang === 'bm' ? 'Kakitangan Klinik' : 'Clinic Staff',
+                clinicDesc: lang === 'bm' ? 'Pengurusan preskripsi dan rekod hospital.' : 'Prescription management and hospital records.',
+                footer: lang === 'bm' ? '© 2025 NexG Godamlah 2.0 Hackathon | Pasukan Full Stack Alchemist' : '© 2025 NexG Godamlah 2.0 Hackathon | Team Full Stack Alchemist'
+            };
+
+            // Update elements if they exist
+            const h1 = document.querySelector('h1');
+            if (h1) h1.textContent = elements.welcome;
+            
+            const subtitle = document.querySelector('header p');
+            if (subtitle) subtitle.textContent = elements.subtitle;
+            
+            const patientCard = document.querySelector('.role-card:first-of-type h3');
+            if (patientCard) patientCard.textContent = elements.patient;
+            
+            const patientDesc = document.querySelector('.role-card:first-of-type p');
+            if (patientDesc) patientDesc.textContent = elements.patientDesc;
+            
+            const doctorCard = document.querySelectorAll('.role-card')[1]?.querySelector('h3');
+            if (doctorCard) doctorCard.textContent = elements.doctor;
+            
+            const doctorDesc = document.querySelectorAll('.role-card')[1]?.querySelector('p');
+            if (doctorDesc) doctorDesc.textContent = elements.doctorDesc;
+            
+            const clinicCard = document.querySelectorAll('.role-card')[2]?.querySelector('h3');
+            if (clinicCard) clinicCard.textContent = elements.clinic;
+            
+            const clinicDesc = document.querySelectorAll('.role-card')[2]?.querySelector('p');
+            if (clinicDesc) clinicDesc.textContent = elements.clinicDesc;
+            
+            const footer = document.querySelector('footer p');
+            if (footer) footer.textContent = elements.footer;
+        }
     </script>
 </body>
 </html>

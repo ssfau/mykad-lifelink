@@ -93,9 +93,43 @@
                 opacity: 0.8;
             }
         }
+
+        /* Back Button Styles */
+        #back-button {
+            position: absolute;
+            top: 8rem;
+            left: 2rem;
+            font-size: 1.25rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.2s ease;
+        }
+
+        #back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        #back-button:active {
+            transform: scale(0.95);
+        }
     </style>
 </head>
 <body class="bg-medical-white min-h-screen flex flex-col">
+    <!-- Back Button -->
+    <button id="back-button" aria-label="Go Back" onclick="window.history.back();">
+        <i class="fas fa-arrow-left"></i>
+    </button>
+
     <!-- Header Section -->
     <header class="bg-gradient-to-br from-red-600 via-red-700 to-red-800 relative overflow-hidden">
         <!-- Decorative Background Elements -->

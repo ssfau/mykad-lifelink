@@ -213,11 +213,46 @@
         #dark-mode-toggle:active {
             transform: scale(0.9);
         }
+
+        /* Back Button Styles */
+        #back-button {
+            position: absolute;
+            top: 8rem;
+            left: 2rem;
+            font-size: 1.25rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.2s ease;
+        }
+
+        #back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        #back-button:active {
+            transform: scale(0.95);
+        }
     </style>
 </head>
 <body class="bg-medical-white min-h-screen flex flex-col">
     <!-- Dark Mode Toggle -->
     <button id="dark-mode-toggle" aria-label="Toggle Dark Mode">☀️</button>
+
+    <!-- Back Button -->
+    <button id="back-button" aria-label="Go Back" onclick="window.history.back();">
+        <i class="fas fa-arrow-left"></i>
+    </button>
+
     <!-- Header Section -->
     <header class="bg-gradient-to-br from-primary-blue via-gov-blue to-gov-blue relative overflow-hidden">
         <!-- Decorative Background Elements -->
@@ -434,17 +469,171 @@
 
         let currentStep = 1;
 
+        // Language Toggle - Load saved preference on page load
+        function loadSavedLanguage() {
+            const savedLang = localStorage.getItem('language') || 'en';
+            const langBtns = document.querySelectorAll('.lang-btn');
+            langBtns.forEach(btn => {
+                if (btn.dataset.lang === savedLang) {
+                    btn.classList.add('active', 'bg-white', 'text-primary-blue');
+                    btn.classList.remove('bg-transparent', 'text-white');
+                } else {
+                    btn.classList.remove('active', 'bg-white', 'text-primary-blue');
+                    btn.classList.add('bg-transparent', 'text-white');
+                }
+            });
+            // Apply language translations on load
+            if (typeof updateLanguage === 'function') {
+                updateLanguage(savedLang);
+            }
+        }
+
+        // Load language immediately when script runs
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadSavedLanguage);
+        } else {
+            loadSavedLanguage();
+        }
+
+        // Listen for storage events to sync language changes across windows/tabs
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'language') {
+                loadSavedLanguage();
+            }
+        });
+
         // Language Toggle
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.lang-btn').forEach(b => {
-                    b.classList.remove('active', 'bg-white', 'text-primary-blue');
-                    b.classList.add('bg-transparent', 'text-white');
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.lang-btn').forEach(b => {
+                        b.classList.remove('active', 'bg-white', 'text-primary-blue');
+                        b.classList.add('bg-transparent', 'text-white');
+                    });
+                    this.classList.add('active', 'bg-white', 'text-primary-blue');
+                    this.classList.remove('bg-transparent', 'text-white');
+                    
+                    // Save language preference
+                    const selectedLang = this.dataset.lang;
+                    localStorage.setItem('language', selectedLang);
+                    
+                    // Apply language translations
+                    updateLanguage(selectedLang);
+                    
+                    // Dispatch storage event manually for same-tab sync
+                    window.dispatchEvent(new StorageEvent('storage', {
+                        key: 'language',
+                        newValue: selectedLang
+                    }));
                 });
-                this.classList.add('active', 'bg-white', 'text-primary-blue');
-                this.classList.remove('bg-transparent', 'text-white');
             });
         });
+
+        function updateLanguage(lang) {
+            const elements = {
+                title: lang === 'bm' ? 'Pendaftaran Doktor' : 'Doctor Registration',
+                subtitle: lang === 'bm' ? 'Lengkapkan profil profesional anda untuk mengakses perkhidmatan LifeLink' : 'Complete your professional profile to access LifeLink services',
+                identityVerification: lang === 'bm' ? 'Pengesahan Identiti' : 'Identity Verification',
+                positionMyKad: lang === 'bm' ? 'Letakkan MyKad anda dalam bingkai' : 'Position your MyKad within the frame',
+                scanMyKad: lang === 'bm' ? 'Imbas MyKad' : 'Scan MyKad',
+                professionalCredentials: lang === 'bm' ? 'Kelayakan Profesional' : 'Professional Credentials',
+                fullName: lang === 'bm' ? 'Nama Penuh' : 'Full Name',
+                scannedFromMyKad: lang === 'bm' ? '(Diimbas dari MyKad)' : '(Scanned from MyKad)',
+                mykadNumber: lang === 'bm' ? 'Nombor MyKad' : 'MyKad Number',
+                mmcNumber: lang === 'bm' ? 'Nombor Pendaftaran MMC' : 'MMC Registration Number',
+                mmcPlaceholder: lang === 'bm' ? 'Masukkan nombor pendaftaran MMC anda' : 'Enter your MMC registration number',
+                specialization: lang === 'bm' ? 'Pengkhususan Perubatan' : 'Medical Specialization',
+                selectSpecialization: lang === 'bm' ? 'Pilih pengkhususan anda' : 'Select your specialization',
+                workplace: lang === 'bm' ? 'Nama Tempat Kerja/Hospital' : 'Workplace/Hospital Name',
+                workplacePlaceholder: lang === 'bm' ? 'Masukkan nama tempat kerja atau hospital anda' : 'Enter your workplace or hospital name',
+                verificationNotice: lang === 'bm' ? 'Notis Pengesahan:' : 'Verification Notice:',
+                verificationText: lang === 'bm' ? 'Kelayakan anda akan disahkan oleh Kementerian Kesihatan (KKM) sebelum pengaktifan akaun. Proses ini mungkin mengambil masa 24-48 jam.' : 'Your credentials will be verified by the Ministry of Health (KKM) before account activation. This process may take 24-48 hours.',
+                completeRegistration: lang === 'bm' ? 'Lengkapkan Pendaftaran' : 'Complete Registration',
+                submitting: lang === 'bm' ? 'Menghantar Pendaftaran...' : 'Submitting Registration...',
+                processing: lang === 'bm' ? 'Sila tunggu semasa kami memproses kelayakan profesional anda' : 'Please wait while we process your professional credentials'
+            };
+
+            // Update header
+            const headerH1 = document.querySelector('header h1');
+            if (headerH1) headerH1.textContent = elements.title;
+            
+            const headerP = document.querySelector('header p');
+            if (headerP) headerP.textContent = elements.subtitle;
+
+            // Update step 1 (Identity Verification)
+            const step1H2 = document.querySelector('#step-1 h2');
+            if (step1H2) step1H2.textContent = elements.identityVerification;
+            
+            const positionText = document.querySelector('#step-1 .text-center.text-white p');
+            if (positionText) positionText.textContent = elements.positionMyKad;
+            
+            const scanButton = document.querySelector('#step-1 button');
+            if (scanButton) {
+                const icon = scanButton.querySelector('i');
+                scanButton.innerHTML = (icon ? icon.outerHTML + ' ' : '') + elements.scanMyKad;
+            }
+
+            // Update step 2 (Professional Credentials)
+            const step2H2 = document.querySelector('#step-2 h2');
+            if (step2H2) step2H2.textContent = elements.professionalCredentials;
+
+            // Update form labels - find by checking for text content
+            const labels = document.querySelectorAll('#step-2 label');
+            labels.forEach(label => {
+                const labelText = label.textContent.trim();
+                if (labelText.includes('Full Name')) {
+                    label.innerHTML = elements.fullName + ' <span class="text-xs text-gray-500">' + elements.scannedFromMyKad + '</span>';
+                } else if (labelText.includes('MyKad Number')) {
+                    label.innerHTML = elements.mykadNumber + ' <span class="text-xs text-gray-500">' + elements.scannedFromMyKad + '</span>';
+                } else if (labelText.includes('MMC Registration Number')) {
+                    const requiredSpan = label.querySelector('.text-red-500');
+                    label.innerHTML = elements.mmcNumber + (requiredSpan ? ' ' + requiredSpan.outerHTML : '');
+                } else if (labelText.includes('Medical Specialization')) {
+                    const requiredSpan = label.querySelector('.text-red-500');
+                    label.innerHTML = elements.specialization + (requiredSpan ? ' ' + requiredSpan.outerHTML : '');
+                } else if (labelText.includes('Workplace/Hospital')) {
+                    const requiredSpan = label.querySelector('.text-red-500');
+                    label.innerHTML = elements.workplace + (requiredSpan ? ' ' + requiredSpan.outerHTML : '');
+                }
+            });
+            
+            const mmcInput = document.getElementById('mmc-number');
+            if (mmcInput) mmcInput.placeholder = elements.mmcPlaceholder;
+
+            const specSelect = document.getElementById('specialization');
+            if (specSelect) {
+                const firstOption = specSelect.querySelector('option[value=""]');
+                if (firstOption) firstOption.textContent = elements.selectSpecialization;
+            }
+            
+            const workplaceInput = document.getElementById('workplace');
+            if (workplaceInput) workplaceInput.placeholder = elements.workplacePlaceholder;
+
+            // Update verification notice
+            const verificationDiv = document.querySelector('.bg-blue-50');
+            if (verificationDiv) {
+                const noticeText = verificationDiv.querySelector('p');
+                if (noticeText) {
+                    const icon = noticeText.querySelector('i');
+                    noticeText.innerHTML = (icon ? icon.outerHTML + ' ' : '') + 
+                        '<strong>' + elements.verificationNotice + '</strong> ' + elements.verificationText;
+                }
+            }
+
+            // Update complete registration button
+            const completeButton = document.querySelector('#step-2 button');
+            if (completeButton) {
+                const icon = completeButton.querySelector('i');
+                completeButton.innerHTML = (icon ? icon.outerHTML + ' ' : '') + elements.completeRegistration;
+            }
+
+            // Update loading overlay (if exists)
+            const loadingTitle = document.getElementById('loading-title');
+            if (loadingTitle) loadingTitle.textContent = elements.submitting;
+            
+            const loadingMessage = document.getElementById('loading-message');
+            if (loadingMessage) loadingMessage.textContent = elements.processing;
+        }
 
         // Simulate MyKad Scan
         function simulateScan() {

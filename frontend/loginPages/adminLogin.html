@@ -137,11 +137,46 @@
         #dark-mode-toggle:active {
             transform: scale(0.9);
         }
+
+        /* Back Button Styles */
+        #back-button {
+            position: absolute;
+            top: 8rem;
+            left: 2rem;
+            font-size: 1.25rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.2s ease;
+        }
+
+        #back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        #back-button:active {
+            transform: scale(0.95);
+        }
     </style>
 </head>
 <body class="bg-medical-white min-h-screen flex flex-col">
     <!-- Dark Mode Toggle -->
     <button id="dark-mode-toggle" aria-label="Toggle Dark Mode">☀️</button>
+
+    <!-- Back Button -->
+    <button id="back-button" aria-label="Go Back" onclick="window.history.back();">
+        <i class="fas fa-arrow-left"></i>
+    </button>
+
     <!-- Header Section -->
     <header class="bg-gradient-to-br from-primary-blue via-gov-blue to-gov-blue relative overflow-hidden">
         <!-- Decorative Background Elements -->
@@ -248,8 +283,8 @@
     <div id="loading-overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
         <div class="bg-white rounded-2xl p-8 shadow-2xl text-center max-w-md mx-4">
             <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-primary-blue mx-auto mb-4"></div>
-            <h3 class="text-xl font-bold text-gray-900 mb-2">Signing In...</h3>
-            <p class="text-gray-600">Please wait while we verify your credentials</p>
+            <h3 class="text-xl font-bold text-gray-900 mb-2" id="loading-title">Signing In...</h3>
+            <p class="text-gray-600" id="loading-message">Please wait while we verify your credentials</p>
         </div>
     </div>
 
@@ -292,18 +327,60 @@
             }
         });
 
+        // Language Toggle - Load saved preference on page load
+        function loadSavedLanguage() {
+            const savedLang = localStorage.getItem('language') || 'en';
+            const langBtns = document.querySelectorAll('.lang-btn');
+            langBtns.forEach(btn => {
+                if (btn.dataset.lang === savedLang) {
+                    btn.classList.add('active', 'bg-white', 'text-primary-blue');
+                    btn.classList.remove('bg-transparent', 'text-white');
+                } else {
+                    btn.classList.remove('active', 'bg-white', 'text-primary-blue');
+                    btn.classList.add('bg-transparent', 'text-white');
+                }
+            });
+            // Apply language on load if function exists
+            if (typeof updateLanguage === 'function') {
+                updateLanguage(savedLang);
+            }
+        }
+
+        // Load language immediately when script runs
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadSavedLanguage);
+        } else {
+            loadSavedLanguage();
+        }
+
+        // Listen for storage events to sync language changes across windows/tabs
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'language') {
+                loadSavedLanguage();
+            }
+        });
+
         // Language Toggle
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.lang-btn').forEach(b => {
-                    b.classList.remove('active', 'bg-white', 'text-primary-blue');
-                    b.classList.add('bg-transparent', 'text-white');
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.lang-btn').forEach(b => {
+                        b.classList.remove('active', 'bg-white', 'text-primary-blue');
+                        b.classList.add('bg-transparent', 'text-white');
+                    });
+                    this.classList.add('active', 'bg-white', 'text-primary-blue');
+                    this.classList.remove('bg-transparent', 'text-white');
+                    
+                    const lang = this.dataset.lang;
+                    localStorage.setItem('language', lang);
+                    updateLanguage(lang);
+                    
+                    // Dispatch storage event manually for same-tab sync (storage event only fires in other tabs)
+                    window.dispatchEvent(new StorageEvent('storage', {
+                        key: 'language',
+                        newValue: lang
+                    }));
                 });
-                this.classList.add('active', 'bg-white', 'text-primary-blue');
-                this.classList.remove('bg-transparent', 'text-white');
-                
-                const lang = this.dataset.lang;
-                updateLanguage(lang);
             });
         });
 
@@ -317,20 +394,55 @@
                 passwordLabel: lang === 'bm' ? 'Kata Laluan' : 'Password',
                 passwordPlaceholder: lang === 'bm' ? 'Masukkan kata laluan' : 'Enter password',
                 signingIn: lang === 'bm' ? 'Sedang Log Masuk...' : 'Signing In...',
-                verifying: lang === 'bm' ? 'Sila tunggu semasa kami mengesahkan kelayakan anda' : 'Please wait while we verify your credentials'
+                verifying: lang === 'bm' ? 'Sila tunggu semasa kami mengesahkan kelayakan anda' : 'Please wait while we verify your credentials',
+                errorMessage: lang === 'bm' ? 'Sila masukkan nama pengguna dan kata laluan.' : 'Please enter both username and password.',
+                loginButton: lang === 'bm' ? 'Log Masuk' : 'Sign In'
             };
 
-            document.querySelector('header h1').textContent = elements.title;
-            document.querySelector('header p').textContent = elements.subtitle;
-            document.querySelector('h2').textContent = elements.signIn;
+            // Update header
+            const headerH1 = document.querySelector('header h1');
+            if (headerH1) headerH1.textContent = elements.title;
             
+            const headerP = document.querySelector('header p');
+            if (headerP) headerP.textContent = elements.subtitle;
+            
+            // Update form heading
+            const formH2 = document.querySelector('h2');
+            if (formH2) formH2.textContent = elements.signIn;
+            
+            // Update username field
             const usernameLabel = document.querySelector('input#username').previousElementSibling;
             if (usernameLabel) usernameLabel.textContent = elements.usernameLabel;
-            document.getElementById('username').placeholder = elements.usernamePlaceholder;
+            const usernameInput = document.getElementById('username');
+            if (usernameInput) usernameInput.placeholder = elements.usernamePlaceholder;
             
+            // Update password field
             const passwordLabel = document.querySelector('input#password').previousElementSibling;
             if (passwordLabel) passwordLabel.textContent = elements.passwordLabel;
-            document.getElementById('password').placeholder = elements.passwordPlaceholder;
+            const passwordInput = document.getElementById('password');
+            if (passwordInput) passwordInput.placeholder = elements.passwordPlaceholder;
+            
+            // Update login button
+            const loginButton = document.querySelector('button[type="submit"]');
+            if (loginButton) {
+                const icon = loginButton.querySelector('i');
+                if (icon) {
+                    loginButton.innerHTML = icon.outerHTML + ' ' + elements.loginButton;
+                } else {
+                    loginButton.textContent = elements.loginButton;
+                }
+            }
+            
+            // Update loading overlay (store for later use)
+            const loadingTitle = document.getElementById('loading-title');
+            if (loadingTitle) loadingTitle.textContent = elements.signingIn;
+            
+            const loadingMessage = document.getElementById('loading-message');
+            if (loadingMessage) loadingMessage.textContent = elements.verifying;
+            
+            // Store error message for later use
+            window.currentLang = lang;
+            window.translations = elements;
         }
 
         // Login Form Handler
@@ -349,12 +461,27 @@
             
             // Validate inputs
             if (!username || !password) {
-                errorText.textContent = 'Please enter both username and password.';
+                const currentLang = localStorage.getItem('language') || 'en';
+                const errorMsgText = currentLang === 'bm' 
+                    ? 'Sila masukkan nama pengguna dan kata laluan.' 
+                    : 'Please enter both username and password.';
+                errorText.textContent = errorMsgText;
                 errorMsg.classList.remove('hidden');
                 return;
             }
             
-            // Show loading overlay
+            // Show loading overlay with translated text
+            const currentLang = localStorage.getItem('language') || 'en';
+            const loadingTitleEl = document.getElementById('loading-title');
+            const loadingMessageEl = document.getElementById('loading-message');
+            if (loadingTitleEl) {
+                loadingTitleEl.textContent = currentLang === 'bm' ? 'Sedang Log Masuk...' : 'Signing In...';
+            }
+            if (loadingMessageEl) {
+                loadingMessageEl.textContent = currentLang === 'bm' 
+                    ? 'Sila tunggu semasa kami mengesahkan kelayakan anda' 
+                    : 'Please wait while we verify your credentials';
+            }
             loadingOverlay.classList.remove('hidden');
             
             // Simulate API call (replace with actual backend call)
