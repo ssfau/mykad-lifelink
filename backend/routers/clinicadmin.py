@@ -16,14 +16,14 @@ router = APIRouter()
 """ CLINIC VIEWING PATIENT DATA"""
 
 # confirmed by frontend, this is to get data from ic scan and return that text to frontend
-@router.post("/clinicadmin/viewpatientdata/mykadscan")
+@router.post("/viewpatientdata/mykadscan")
 async def ocr_mykadscan(file: UploadFile = File(...), db: Session = Depends(get_db), session=Depends(require_auth(["clinic_admin"]))):
     # reminder: save raw ocr text to database
     return await ocr_mykad_image(file)
 
 # view patient data limited to their role
 @router.get(
-    "/clinic/viewpatientdata/profile",
+    "/viewpatientdata/profile",
     response_model=schemas.ClinicPatientViewResponse
 )
 def get_patient_profile_clinic(
@@ -72,7 +72,7 @@ def get_patient_profile_clinic(
     }
 
 # add prescription or complaints
-@router.post("/clinic/viewpatientdata/update")
+@router.post("/viewpatientdata/update")
 def clinic_add_patient_records(
     nric: str,
     payload: schemas.ClinicPatientUpdateRequest,

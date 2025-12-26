@@ -16,13 +16,13 @@ router = APIRouter()
 """ DOCTOR VIEWING PATIENT DATA"""
 
 # confirmed by frontend, this is to get data from ic scan and return that text to frontend
-@router.post("/doctor/viewpatientdata/mykadscan")
+@router.post("/viewpatientdata/mykadscan")
 async def ocr_mykadscan(file: UploadFile = File(...), db: Session = Depends(get_db), session=Depends(require_auth(["doctor"]))):
     # reminder: save raw ocr text to database
     return await ocr_mykad_image(file)
 
 # view patient data
-@router.get("/doctor/viewpatientdata/profile", response_model=schemas.PatientDataResponse)
+@router.get("/viewpatientdata/profile", response_model=schemas.PatientDataResponse)
 def get_patient_profile(nric: str, db: Session = Depends(get_db), session=Depends(require_auth(["doctor"]))):
     # Query patient by NRIC
     patient = db.query(patient_logic.Patient).filter(patient_logic.Patient.nric_number == nric).first()
