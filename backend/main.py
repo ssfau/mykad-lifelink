@@ -32,7 +32,7 @@ if os.getenv("RAILWAY_ENVIRONMENT") or os.getenv("PORT"):
         if os.path.exists(login_dir):
             app.mount("/loginPages", StaticFiles(directory=login_dir), name="loginPages")
         
-        # Mount pages
+        # Mount pages directory (serves files at /pages/filename.html)
         pages_dir = os.path.join(frontend_dir, "pages")
         if os.path.exists(pages_dir):
             app.mount("/pages", StaticFiles(directory=pages_dir), name="pages")
@@ -49,7 +49,7 @@ app.add_middleware(
 
 Base.metadata.create_all(bind=engine)
 
-# Include API routers
+# Include API routers (these come after static mounts, so /pages/* won't match /doctor/*)
 app.include_router(doctor_router, prefix="/doctor")
 app.include_router(patient_router, prefix="/patient")
 app.include_router(clinicadmin_router, prefix="/clinicadmin")
