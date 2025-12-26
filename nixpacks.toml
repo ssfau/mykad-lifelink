@@ -1,12 +1,12 @@
 [phases.setup]
-nixPkgs = ["python3", "tesseract"]
+aptPkgs = ["tesseract-ocr", "libtesseract-dev"]
 
 [phases.install]
 cmds = [
-  "python3 -m pip install --upgrade pip",
-  "python3 -m pip install -r requirements.txt"
+  "pip install --upgrade pip",
+  "pip install -r requirements.txt"
 ]
 
 [start]
-cmd = "python3 railway_start.py"
+cmd = "python railway_start.py"
 
