@@ -272,11 +272,45 @@
         #dark-mode-toggle:active {
             transform: scale(0.9);
         }
+
+        /* Back Button Styles */
+        #back-button {
+            position: absolute;
+            top: 8rem;
+            left: 2rem;
+            font-size: 1.25rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.2s ease;
+        }
+
+        #back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        #back-button:active {
+            transform: scale(0.95);
+        }
     </style>
 </head>
 <body class="bg-medical-white min-h-screen flex flex-col">
     <!-- Dark Mode Toggle -->
     <button id="dark-mode-toggle" aria-label="Toggle Dark Mode">🌙</button>
+
+    <!-- Back Button -->
+    <button id="back-button" aria-label="Go Back" onclick="window.history.back();">
+        <i class="fas fa-arrow-left"></i>
+    </button>
 
     <!-- Header Section -->
     <header class="bg-gradient-to-br from-primary-blue via-gov-blue to-gov-blue relative overflow-hidden">
@@ -560,15 +594,71 @@
             }
         });
 
+        // Language Toggle - Load saved preference on page load
+        (function() {
+            const savedLang = localStorage.getItem('language') || 'en';
+            const langBtns = document.querySelectorAll('.lang-btn');
+            langBtns.forEach(btn => {
+                if (btn.dataset.lang === savedLang) {
+                    btn.classList.add('active', 'bg-white', 'text-primary-blue');
+                    btn.classList.remove('bg-transparent', 'text-white');
+                } else {
+                    btn.classList.remove('active', 'bg-white', 'text-primary-blue');
+                    btn.classList.add('bg-transparent', 'text-white');
+                }
+            });
+        })();
+
+        // Language Toggle - Load saved preference on page load
+        function loadSavedLanguage() {
+            const savedLang = localStorage.getItem('language') || 'en';
+            const langBtns = document.querySelectorAll('.lang-btn');
+            langBtns.forEach(btn => {
+                if (btn.dataset.lang === savedLang) {
+                    btn.classList.add('active', 'bg-white', 'text-primary-blue');
+                    btn.classList.remove('bg-transparent', 'text-white');
+                } else {
+                    btn.classList.remove('active', 'bg-white', 'text-primary-blue');
+                    btn.classList.add('bg-transparent', 'text-white');
+                }
+            });
+        }
+
+        // Load language immediately when script runs
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadSavedLanguage);
+        } else {
+            loadSavedLanguage();
+        }
+
+        // Listen for storage events to sync language changes across windows/tabs
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'language') {
+                loadSavedLanguage();
+            }
+        });
+
         // Language Toggle
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.lang-btn').forEach(b => {
-                    b.classList.remove('active', 'bg-white', 'text-primary-blue');
-                    b.classList.add('bg-transparent', 'text-white');
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.lang-btn').forEach(b => {
+                        b.classList.remove('active', 'bg-white', 'text-primary-blue');
+                        b.classList.add('bg-transparent', 'text-white');
+                    });
+                    this.classList.add('active', 'bg-white', 'text-primary-blue');
+                    this.classList.remove('bg-transparent', 'text-white');
+                    
+                    // Save language preference
+                    const selectedLang = this.dataset.lang;
+                    localStorage.setItem('language', selectedLang);
+                    
+                    // Dispatch storage event manually for same-tab sync
+                    window.dispatchEvent(new StorageEvent('storage', {
+                        key: 'language',
+                        newValue: selectedLang
+                    }));
                 });
-                this.classList.add('active', 'bg-white', 'text-primary-blue');
-                this.classList.remove('bg-transparent', 'text-white');
             });
         });
 
